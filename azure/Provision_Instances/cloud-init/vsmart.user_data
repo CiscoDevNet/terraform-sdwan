@@ -1,0 +1,69 @@
+Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+MIME-Version: 1.0
+
+--==BOUNDARY==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+
+#cloud-boothook
+system
+ host-name vsmart
+
+ aaa
+  auth-order local radius tacacs
+  usergroup basic
+   task system read write
+   task interface read write
+  !
+
+  usergroup netadmin
+  !
+
+  usergroup operator
+   task system read
+   task interface read
+   task policy read
+   task routing read
+   task security read
+  !
+
+  user admin
+   password $6$ZSa1yl/RYmnRIiXw$F7.lE6cHwglxBDWlbFoJEEOifm3bDuTYaGIfi61BgYgJmlswFIOrsyh5fdLs0TH998EmeUU77JECV6fXSU3uk0
+  !
+ !
+
+ logging
+  disk
+   enable
+  !
+ !
+!
+
+omp
+ no shutdown
+ graceful-restart
+!
+
+vpn 0
+ interface eth1
+  ip dhcp-client
+  tunnel-interface
+   allow-service dhcp
+   allow-service dns
+   allow-service icmp
+   no allow-service sshd
+   allow-service netconf
+   no allow-service ntp
+   no allow-service stun
+   allow-service https
+  !
+  no shutdown
+ !
+!
+
+vpn 512
+ interface eth0
+  ip dhcp-client
+  no shutdown
+ !
+!
+--==BOUNDARY==

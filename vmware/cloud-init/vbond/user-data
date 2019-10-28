@@ -1,0 +1,33 @@
+Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+MIME-Version: 1.0
+
+--==BOUNDARY==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+
+#cloud-boothook
+!
+vpn 0
+ %{ if ipv4_gateway != ""}
+ ip route 0.0.0.0/0 ${ipv4_gateway}
+ %{ endif }
+
+ interface ge0/0
+  %{ if ipv4_address != "dhcp" }
+  ip address ${ipv4_address}
+  %{ else }
+  ip dhcp-client
+  %{ endif }
+
+  tunnel-interface
+   allow-service all
+  !
+  no shutdown
+ !
+!
+vpn 512
+ interface eth0
+  ip dhcp-client
+  shutdown
+ !
+!
+--==BOUNDARY==
