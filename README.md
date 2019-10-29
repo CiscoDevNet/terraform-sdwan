@@ -103,7 +103,7 @@ vedge_device_list = [
 
 > Note: the `*_template`, `datacenter`, `cluster`, `datastore` and `iso_datastore` values should be set to the names of the respective objects in vCenter.
 
-> Note: `ipv4_address` must be set to either "dhcp" or a static IP address in address/prefix-length notation (i.e. 192.168.0.2/24).  When specifying a static IP address, `ipv4_gateway` is also required.
+> Note: `ipv4_address` is applied to VPN 0 must be set to either "dhcp" or a static IP address in address/prefix-length notation (i.e. 192.168.0.2/24).  When specifying a static IP address, `ipv4_gateway` is also required.
 
 You can set the server and login credentials for vCenter in your environment if you do not want to put these in the `terraform.tfvars` file.  Example:
 
