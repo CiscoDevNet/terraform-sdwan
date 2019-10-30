@@ -1,0 +1,9 @@
+*.tfvars
+*.tfstate
+*.backup
+*.info
+*.iso
+ISO
+.terraform
+*.pem
+*.tfplan
