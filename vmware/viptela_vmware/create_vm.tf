@@ -42,6 +42,7 @@ data "vsphere_network" "network" {
 }
 
 data "vsphere_virtual_machine" "template" {
+  count = var.template == "" ? 0 : 1
 
   name          = "${var.template}"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
@@ -56,14 +57,14 @@ resource "vsphere_virtual_machine" "vm" {
 
   num_cpus  = "${var.vm_num_cpus}"
   memory    = "${var.vm_memory}"
-  guest_id  = "${data.vsphere_virtual_machine.template.guest_id}"
-  scsi_type = "${data.vsphere_virtual_machine.template.scsi_type}"
+  guest_id  = "${data.vsphere_virtual_machine.template[0].guest_id}"
+  scsi_type = "${data.vsphere_virtual_machine.template[0].scsi_type}"
 
   disk {
     label            = "disk0"
-    size             = "${data.vsphere_virtual_machine.template.disks.0.size}"
-    eagerly_scrub    = "${data.vsphere_virtual_machine.template.disks.0.eagerly_scrub}"
-    thin_provisioned = "${data.vsphere_virtual_machine.template.disks.0.thin_provisioned}"
+    size             = "${data.vsphere_virtual_machine.template[0].disks.0.size}"
+    eagerly_scrub    = "${data.vsphere_virtual_machine.template[0].disks.0.eagerly_scrub}"
+    thin_provisioned = "${data.vsphere_virtual_machine.template[0].disks.0.thin_provisioned}"
   } 
 
   # Add additional data disks
@@ -83,27 +84,17 @@ resource "vsphere_virtual_machine" "vm" {
     path         = "${var.iso_path}/${var.device_list[count.index].name}.iso"
   }
 
-  # network_interface {
-  #   network_id   = "${data.vsphere_network.network[count.index].id}"
-  #   adapter_type = "${data.vsphere_virtual_machine.template.network_interface_types[0]}"
-  # }
-
-  # network_interface {
-  #   network_id   = "${data.vsphere_network.network[count.index].id}"
-  #   adapter_type = "${data.vsphere_virtual_machine.template.network_interface_types[0]}"
-  # }
-
   dynamic "network_interface" {
     for_each = var.device_list[count.index].networks
 
     content {
       network_id   = "${data.vsphere_network.network["${count.index}.${network_interface.key}"].id}"
-      adapter_type = "${data.vsphere_virtual_machine.template.network_interface_types[0]}"
+      adapter_type = "${data.vsphere_virtual_machine.template[0].network_interface_types[0]}"
     }
   }
 
   clone {
-    template_uuid = "${data.vsphere_virtual_machine.template.id}"
+    template_uuid = "${data.vsphere_virtual_machine.template[0].id}"
   }
 
   depends_on = [
