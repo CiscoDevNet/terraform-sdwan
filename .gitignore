@@ -5,3 +5,5 @@
 *.iso
 ISO
 .terraform
+*.pem
+*.tfplan
