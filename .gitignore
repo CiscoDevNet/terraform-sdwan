@@ -1,4 +1,3 @@
-*.tfvars
 *.tfstate
 *.backup
 *.info
@@ -7,3 +6,4 @@ ISO
 .terraform
 *.pem
 *.tfplan
+*.tfvars.json
