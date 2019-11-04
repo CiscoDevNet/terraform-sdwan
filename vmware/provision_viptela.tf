@@ -1,3 +1,12 @@
+terraform {
+  backend "s3" {
+  }
+}
+
+provider "aws" {
+  region = "us-east-1"
+}
+
 provider "vsphere" {
   user           = "${var.vsphere_user}"
   password       = "${var.vsphere_password}"
