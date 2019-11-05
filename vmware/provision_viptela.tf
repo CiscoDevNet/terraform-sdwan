@@ -1,16 +1,16 @@
-terraform {
-  backend "s3" {
-    region          = "us-east-1"
-    bucket          = "terraform-state-sdwan-jenkins"
-    key             = "global/s3/terraform.tfstate"
-    dynamodb_table  = "terraform-locks-sdwan-jenkins"
-    encrypt         = true
-  }
-}
+#terraform {
+#  backend "s3" {
+#    region          = "us-east-1"
+#    bucket          = "terraform-state-sdwan-jenkins"
+#    key             = "global/s3/terraform.tfstate"
+#    dynamodb_table  = "terraform-locks-sdwan-jenkins"
+#    encrypt         = true
+#  }
+#}
 
-provider "aws" {
-  region = "us-east-1"
-}
+#provider "aws" {
+#  region = "us-east-1"
+#}
 
 provider "vsphere" {
   user           = "${var.vsphere_user}"
