@@ -17,6 +17,7 @@ variable "vsmart_template" {
 variable "datacenter" {}
 variable "cluster" {}
 variable "datastore" {}
+variable "resource_pool" {}
 variable "iso_datastore" {}
 variable "iso_path" {}
 variable "vmanage_device_list" {
