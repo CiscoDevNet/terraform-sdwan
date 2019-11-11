@@ -7,6 +7,5 @@ ISO
 *.pem
 *.tfplan
 *.tfvars.json
-vmware/control.tfvars
-vmware/edges.tfvars
-vmware/backend.hcl
+*.tfvars
+*.hcl
