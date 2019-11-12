@@ -49,6 +49,7 @@ iso_path          = "cloud-init"
 vmanage_template  = "viptela-vmanage-18.4.3-genericx86-64"
 vbond_template    = "viptela-edge-18.4.3-genericx86-64"
 vsmart_template   = "viptela-smart-18.4.3-genericx86-64"
+vedge_template    = "viptela-edge-18.4.3-genericx86-64"
 
 vmanage_device_list = [
   {
