@@ -65,7 +65,7 @@ module "provision_vbond_vmware" {
   iso_datastore = "${var.iso_datastore}"
   iso_path = "${var.iso_path}"
   template = "${var.vbond_template}"
-  vm_num_cpus = 4
+  vm_num_cpus = 2
   vm_memory = 4096
   vm_add_disks = []
   vm_thin_provisioned = true
@@ -82,8 +82,8 @@ module "provision_vedge_vmware" {
   iso_datastore = "${var.iso_datastore}"
   iso_path = "${var.iso_path}"
   template = "${var.vedge_template}"
-  vm_num_cpus = 4
-  vm_memory = 4096
+  vm_num_cpus = 2
+  vm_memory = 2048
   vm_add_disks = []
   vm_thin_provisioned = true
   cloudinit_path = "${path.root}/cloud-init/vedge/"
