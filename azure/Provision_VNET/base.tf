@@ -1,30 +1,31 @@
 /*
   Requires:
-  - Azzure Region
+  - Azure Region
   - CIDR block with <= 28 bit prefix length
 
   Provisions:
   - VNET,
+  - Availability Sets
   - public route table,
-  - subnet in different availability zones,
+  - subnet,
   - security group for the Viptela controllers
 */
 
 /*
   VNET
 */
-resource "azurerm_resource_group" "ViptelaControllers" {
-  name     = "ViptelaControllers"
+resource "azurerm_resource_group" "ViptelaControllers777" {
+  name     = "ViptelaControllers777"
   location = "${var.region}"
 }
 
 /*
   Security Group
 */
-resource "azurerm_network_security_group" "ViptelaControllers" {
-  name = "ViptelaControllers"
+resource "azurerm_network_security_group" "ViptelaControllers777" {
+  name = "ViptelaControllers777"
   location = "${var.region}"
-  resource_group_name = "${azurerm_resource_group.ViptelaControllers.name}"
+  resource_group_name = "${azurerm_resource_group.ViptelaControllers777.name}"
 
   security_rule {
     name = "ControlTCP"
@@ -99,32 +100,32 @@ resource "azurerm_network_security_group" "ViptelaControllers" {
   }
 
   tags = {
-    environment = "ViptelaControllers"
+    environment = "ViptelaControllers777"
   }
 }
 
 /*
   VNET
 */
-resource "azurerm_virtual_network" "ViptelaControllers" {
-  name                = "ViptelaControllers"
-  resource_group_name = "${azurerm_resource_group.ViptelaControllers.name}"
+resource "azurerm_virtual_network" "ViptelaControllers777" {
+  name                = "ViptelaControllers777"
+  resource_group_name = "${azurerm_resource_group.ViptelaControllers777.name}"
   address_space       = ["${var.cidr_block}"]
   location            = "${var.region}"
   dns_servers         = ["208.67.222.222"]
 
   tags = {
-    environment = "ViptelaControllers"
+    Name = "ViptelaControllers777"
   }
 }
 
 /*
   Route Table
 */
-resource "azurerm_route_table" "ViptelaControllers" {
-  name                = "ViptelaControllers"
+resource "azurerm_route_table" "ViptelaControllers777" {
+  name                = "ViptelaControllers777"
   location            = "${var.region}"
-  resource_group_name = "${azurerm_resource_group.ViptelaControllers.name}"
+  resource_group_name = "${azurerm_resource_group.ViptelaControllers777.name}"
 
   route {
     name           = "DefaultInternet"
@@ -133,21 +134,60 @@ resource "azurerm_route_table" "ViptelaControllers" {
   }
 
   tags = {
-    environment = "ViptelaControllers"
+    Name = "ViptelaControllers777"
   }
 }
 
 /*
   Subnet
 */
-resource "azurerm_subnet" "ViptelaControllers" {
-  name                 = "ViptelaControllers"
-  resource_group_name  = "${azurerm_resource_group.ViptelaControllers.name}"
-  virtual_network_name = "${azurerm_virtual_network.ViptelaControllers.name}"
+resource "azurerm_subnet" "ViptelaControllers777" {
+  name                 = "ViptelaControllers777"
+  resource_group_name  = "${azurerm_resource_group.ViptelaControllers777.name}"
+  virtual_network_name = "${azurerm_virtual_network.ViptelaControllers777.name}"
   address_prefix       = "${var.cidr_block}"
 }
 
 resource "azurerm_subnet_route_table_association" "test" {
-  subnet_id      = "${azurerm_subnet.ViptelaControllers.id}"
-  route_table_id = "${azurerm_route_table.ViptelaControllers.id}"
+  subnet_id      = "${azurerm_subnet.ViptelaControllers777.id}"
+  route_table_id = "${azurerm_route_table.ViptelaControllers777.id}"
+}
+
+/*
+  Availability Sets
+*/
+resource "azurerm_availability_set" "avsetvmanage" {
+  name                = "avsetvmanage"
+  managed             = true
+  location            = "${var.region}"
+  resource_group_name = "${azurerm_resource_group.ViptelaControllers777.name}"
+
+  tags = {
+    Name = "avsetvmanage"
+  }
+}
+
+resource "azurerm_availability_set" "avsetvbond" {
+  name                = "avsetvbond"
+  managed             = true
+  location            = "${var.region}"
+  resource_group_name = "${azurerm_resource_group.ViptelaControllers777.name}"
+
+  tags = {
+    Name = "avsetvbond"
+  }
+}
+
+/*
+  Availability Sets
+*/
+resource "azurerm_availability_set" "avsetvsmart" {
+  name                = "avsetvsmart"
+  managed             = true
+  location            = "${var.region}"
+  resource_group_name = "${azurerm_resource_group.ViptelaControllers777.name}"
+
+  tags = {
+    Name = "avsetvsmart"
+  }
 }
