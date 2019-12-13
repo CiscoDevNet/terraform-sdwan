@@ -3,7 +3,7 @@ output "region" {
 }
 
 output "resource_group_name" {
-  value = "${azurerm_resource_group.ViptelaControllers777.name}"
+  value = "${azurerm_resource_group.ViptelaControllers.name}"
 }
 
 output "cidr_block" {
@@ -11,11 +11,11 @@ output "cidr_block" {
 }
 
 output "Vipela_Control_Plane" {
-  value = "${azurerm_network_security_group.ViptelaControllers777.id}"
+  value = "${azurerm_network_security_group.ViptelaControllers.id}"
 }
 
 output "subnet" {
-  value = "${azurerm_subnet.ViptelaControllers777.id}"
+  value = "${azurerm_subnet.ViptelaControllers.id}"
 }
 
 output "avsetvsmart" {
