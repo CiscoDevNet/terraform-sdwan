@@ -1,17 +1,3 @@
-#terraform {
-#  backend "s3" {
-#    region          = "us-east-1"
-#    bucket          = "terraform-state-sdwan-jenkins"
-#    key             = "global/s3/terraform.tfstate"
-#    dynamodb_table  = "terraform-locks-sdwan-jenkins"
-#    encrypt         = true
-#  }
-#}
-
-#provider "aws" {
-#  region = "us-east-1"
-#}
-
 provider "vsphere" {
   user           = "${var.vsphere_user}"
   password       = "${var.vsphere_password}"
@@ -83,7 +69,7 @@ module "provision_vedge_vmware" {
   iso_path = "${var.iso_path}"
   template = "${var.vedge_template}"
   vm_num_cpus = 2
-  vm_memory = 2048
+  vm_memory = 4096
   vm_add_disks = []
   vm_thin_provisioned = true
   cloudinit_path = "${path.root}/cloud-init/vedge/"

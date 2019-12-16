@@ -57,7 +57,6 @@ resource "vsphere_virtual_machine" "vm" {
   count = length(var.device_list)
 
   name              = "${var.device_list[count.index].name}"
-#  resource_pool_id  = "${data.vsphere_compute_cluster.compute_cluster.resource_pool_id}"
   resource_pool_id  = "${data.vsphere_resource_pool.resource_pool.id}"
   datastore_id      = "${data.vsphere_datastore.datastore.id}"
 
