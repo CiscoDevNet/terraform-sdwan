@@ -71,6 +71,19 @@ module "provision_vedge_vmware" {
   cloudinit_path = "${path.root}/cloud-init/vedge/"
 }
 
+module "provision_cedge_vmware" {
+  source = "./cedge_vmware"
+  device_list = "${var.cedge_device_list}"
+  datacenter = "${var.datacenter}"
+  cluster = "${var.cluster}"
+  datastore = "${var.datastore}"
+  template = "${var.cedge_template}"
+  vm_num_cpus = 1
+  vm_memory = 4096
+  vm_add_disks = []
+  vm_thin_provisioned = true
+}
+
 output "vmanage_ip_addresses" {
     value = "${module.provision_vmanage_vmware.ip_addresses}"
 }
@@ -85,4 +98,8 @@ output "vbond_ip_addresses" {
 
 output "vedge_ip_addresses" {
     value = "${module.provision_vedge_vmware.ip_addresses}"
+}
+
+output "cedge_ip_addresses" {
+  value = "${module.provision_cedge_vmware.ip_addresses}"
 }

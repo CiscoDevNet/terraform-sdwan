@@ -6,4 +6,4 @@ ISO
 .terraform
 *.pem
 *.tfplan
-*.tfvars.json
+*.tfvars
