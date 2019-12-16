@@ -23,6 +23,8 @@ data "vsphere_compute_cluster" "compute_cluster" {
 }
 
 data "vsphere_resource_pool" "resource_pool" {
+  count = var.resource_pool == "" ? 0 : 1
+
   name          = "${var.resource_pool}"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
@@ -57,7 +59,7 @@ resource "vsphere_virtual_machine" "vm" {
   count = length(var.device_list)
 
   name              = "${var.device_list[count.index].name}"
-  resource_pool_id  = "${data.vsphere_resource_pool.resource_pool.id}"
+  resource_pool_id  = var.resource_pool == "" ? data.vsphere_compute_cluster.compute_cluster.resource_pool_id : data.vsphere_resource_pool.resource_pool[0].id
   datastore_id      = "${data.vsphere_datastore.datastore.id}"
 
   num_cpus  = "${var.vm_num_cpus}"
