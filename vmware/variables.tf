@@ -9,9 +9,11 @@ variable "vbond_template" {
 }
 variable "vedge_template" {
   default = ""
-
 }
 variable "vsmart_template" {
+  default = ""
+}
+variable "cedge_template" {
   default = ""
 }
 variable "datacenter" {}
@@ -35,6 +37,10 @@ variable "vbond_device_list" {
   default = []
 }
 variable "vedge_device_list" {
+  type = any
+  default = []
+}
+variable "cedge_device_list" {
   type = any
   default = []
 }

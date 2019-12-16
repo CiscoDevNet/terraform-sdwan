@@ -1,12 +1,13 @@
 /*
   Requires:
-  - Azzure Region
+  - Azure Region
   - CIDR block with <= 28 bit prefix length
 
   Provisions:
   - VNET,
+  - Availability Sets
   - public route table,
-  - subnet in different availability zones,
+  - subnet,
   - security group for the Viptela controllers
 */
 
@@ -114,7 +115,7 @@ resource "azurerm_virtual_network" "ViptelaControllers" {
   dns_servers         = ["208.67.222.222"]
 
   tags = {
-    environment = "ViptelaControllers"
+    Name = "ViptelaControllers"
   }
 }
 
@@ -133,7 +134,7 @@ resource "azurerm_route_table" "ViptelaControllers" {
   }
 
   tags = {
-    environment = "ViptelaControllers"
+    Name = "ViptelaControllers"
   }
 }
 
@@ -150,4 +151,43 @@ resource "azurerm_subnet" "ViptelaControllers" {
 resource "azurerm_subnet_route_table_association" "test" {
   subnet_id      = "${azurerm_subnet.ViptelaControllers.id}"
   route_table_id = "${azurerm_route_table.ViptelaControllers.id}"
+}
+
+/*
+  Availability Sets
+*/
+resource "azurerm_availability_set" "avsetvmanage" {
+  name                = "avsetvmanage"
+  managed             = true
+  location            = "${var.region}"
+  resource_group_name = "${azurerm_resource_group.ViptelaControllers.name}"
+
+  tags = {
+    Name = "avsetvmanage"
+  }
+}
+
+resource "azurerm_availability_set" "avsetvbond" {
+  name                = "avsetvbond"
+  managed             = true
+  location            = "${var.region}"
+  resource_group_name = "${azurerm_resource_group.ViptelaControllers.name}"
+
+  tags = {
+    Name = "avsetvbond"
+  }
+}
+
+/*
+  Availability Sets
+*/
+resource "azurerm_availability_set" "avsetvsmart" {
+  name                = "avsetvsmart"
+  managed             = true
+  location            = "${var.region}"
+  resource_group_name = "${azurerm_resource_group.ViptelaControllers.name}"
+
+  tags = {
+    Name = "avsetvsmart"
+  }
 }

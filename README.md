@@ -49,6 +49,7 @@ iso_path          = "cloud-init"
 vmanage_template  = "viptela-vmanage-18.4.3-genericx86-64"
 vbond_template    = "viptela-edge-18.4.3-genericx86-64"
 vsmart_template   = "viptela-smart-18.4.3-genericx86-64"
+vedge_template    = "viptela-edge-18.4.3-genericx86-64"
 
 vmanage_device_list = [
   {
@@ -255,8 +256,10 @@ To destroy the empty controllers' VPC, go to the Provision_VPC directory and run
 $ terraform destroy -force
 ```
 
-##Azure
-###Coming soon...
+## Azure
+Upload VHDs for vBond, vManage, and vSmart into an Azure Page Blob in the region in which you'd like to deploy controllers.
+Note - Page blob must be untarred and unzipped before upload
+Create images from the storage blobs.
 
 You can set your ARM credentials in your environment.  See below:
 ```
@@ -264,4 +267,84 @@ export TF_VAR_ARM_CLIENT_ID="00000000-0000-0000-0000-000000000000"
 export TF_VAR_ARM_CLIENT_SECRET="00000000-0000-0000-0000-000000000000"
 export TF_VAR_ARM_SUBSCRIPTION_ID="00000000-0000-0000-0000-000000000000"
 export TF_VAR_ARM_TENANT_ID="00000000-0000-0000-0000-000000000000"
+```
+
+Deploy Azure VNET for Cisco SD-WAN controllers:
+Edit Provision_VNET/my_vnet_variables.auto.tfvars.json with your region and VNET cidr_block.
+```
+{
+    "region": "eastus",
+    "cidr_block": "10.200.200.0/24"
+}
+```
+With Provision_VNET as your current working directory, run terraform.
+```
+$ terraform init
+$ terraform plan
+$ terraform apply
+```
+Deploy Controllers into VNET:
+Edit Provision_Instances/my_instances_variables.auto.tfvars.json with appropriate settings.
+```
+{
+    "vbond_instances_type": "Standard_DS3_v2",
+    "vbond_image": "/subscriptions/X-X-X-X/resourceGroups/csr_test/providers/Microsoft.Compute/images/vbond19_2_0",
+    "vbond_count": "1",
+    "vmanage_instances_type": "Standard_DS5_v2",
+    "vmanage_image": "/subscriptions/X-X-X-X/resourceGroups/csr_test/providers/Microsoft.Compute/images/vmanage19_2_0",
+    "vmanage_count": "1",
+    "vsmart_instances_type": "Standard_DS3_v2",
+    "vsmart_image": "/subscriptions/X-X-X-X/resourceGroups/csr_test/providers/Microsoft.Compute/images/vsmart19_2_0",
+    "vsmart_count": "1",
+    "username": "cisco",
+    "password": "Cisco1234512345"
+}
+```
+Retreive the IP addressing assigned to all control plane components.
+```
+$ terraform output
+vbonds_vbondEth0Ip = [
+  "10.200.200.4",
+]
+vbonds_vbondEth0PIP = [
+  "23.96.36.204",
+]
+vbonds_vbondEth1Ip = [
+  "10.200.200.8",
+]
+vbonds_vbondEth1PIP = [
+  "23.96.46.156",
+]
+vmanages_vmanageEth0Ip = [
+  "10.200.200.6",
+]
+vmanages_vmanageEth0PIP = [
+  "23.96.46.123",
+]
+vmanages_vmanageEth1Ip = [
+  "10.200.200.9",
+]
+vmanages_vmanageEth1PIP = [
+  "23.96.46.174",
+]
+vsmarts_vsmartEth0Ip = [
+  "10.200.200.7",
+]
+vsmarts_vsmartEth0PIP = [
+  "23.96.46.20",
+]
+vsmarts_vsmartEth1Ip = [
+  "10.200.200.5",
+]
+vsmarts_vsmartEth1PIP = [
+  "23.96.39.76",
+]
+```
+To terminate instances, go to the Provision_Instances directory and run:
+```
+$ terraform destroy -force
+```
+To destroy the empty controllers' VNET, go to the Provision_VNET directory and run:
+```
+$ terraform destroy -force
 ```
