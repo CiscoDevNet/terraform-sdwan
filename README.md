@@ -288,10 +288,10 @@ Edit Provision_Instances/my_instances_variables.auto.tfvars.json with appropriat
 ```
 {
     "vbond_instances_type": "Standard_DS3_v2",
-    "vbond_image": "/subscriptions/X-X-X-X/resourceGroups/csr_test/providers/Microsoft.Compute/images/vsmart19_2_0",
+    "vbond_image": "/subscriptions/X-X-X-X/resourceGroups/csr_test/providers/Microsoft.Compute/images/vbond19_2_0",
     "vbond_count": "1",
     "vmanage_instances_type": "Standard_DS5_v2",
-    "vmanage_image": "/subscriptions/X-X-X-X/resourceGroups/csr_test/providers/Microsoft.Compute/images/vsmart19_2_0",
+    "vmanage_image": "/subscriptions/X-X-X-X/resourceGroups/csr_test/providers/Microsoft.Compute/images/vmanage19_2_0",
     "vmanage_count": "1",
     "vsmart_instances_type": "Standard_DS3_v2",
     "vsmart_image": "/subscriptions/X-X-X-X/resourceGroups/csr_test/providers/Microsoft.Compute/images/vsmart19_2_0",
