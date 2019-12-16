@@ -7,3 +7,5 @@ ISO
 *.pem
 *.tfplan
 *.tfvars
+*.tfvars.json
+*.hcl

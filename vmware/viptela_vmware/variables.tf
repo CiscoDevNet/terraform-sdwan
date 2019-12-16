@@ -1,5 +1,6 @@
 variable "datacenter" {}
 variable "cluster" {}
+variable "resource_pool" {}
 variable "datastore" {}
 variable "iso_datastore" {}
 variable "iso_path" {}

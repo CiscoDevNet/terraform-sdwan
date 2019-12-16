@@ -12,6 +12,7 @@ module "provision_vmanage_vmware" {
   device_list = "${var.vmanage_device_list}"
   datacenter = "${var.datacenter}"
   cluster = "${var.cluster}"
+  resource_pool = "${var.resource_pool}"
   datastore = "${var.datastore}"
   iso_datastore = "${var.iso_datastore}"
   iso_path = "${var.iso_path}"
@@ -28,6 +29,7 @@ module "provision_vsmart_vmware" {
   device_list = "${var.vsmart_device_list}"
   datacenter = "${var.datacenter}"
   cluster = "${var.cluster}"
+  resource_pool = "${var.resource_pool}"
   datastore = "${var.datastore}"
   iso_datastore = "${var.iso_datastore}"
   iso_path = "${var.iso_path}"
@@ -45,10 +47,11 @@ module "provision_vbond_vmware" {
   datacenter = "${var.datacenter}"
   cluster = "${var.cluster}"
   datastore = "${var.datastore}"
+  resource_pool = "${var.resource_pool}"
   iso_datastore = "${var.iso_datastore}"
   iso_path = "${var.iso_path}"
   template = "${var.vbond_template}"
-  vm_num_cpus = 4
+  vm_num_cpus = 2
   vm_memory = 4096
   vm_add_disks = []
   vm_thin_provisioned = true
@@ -61,10 +64,11 @@ module "provision_vedge_vmware" {
   datacenter = "${var.datacenter}"
   cluster = "${var.cluster}"
   datastore = "${var.datastore}"
+  resource_pool = "${var.resource_pool}"
   iso_datastore = "${var.iso_datastore}"
   iso_path = "${var.iso_path}"
   template = "${var.vedge_template}"
-  vm_num_cpus = 4
+  vm_num_cpus = 2
   vm_memory = 4096
   vm_add_disks = []
   vm_thin_provisioned = true
