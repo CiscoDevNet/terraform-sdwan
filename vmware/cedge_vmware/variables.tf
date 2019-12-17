@@ -1,6 +1,7 @@
 variable "datacenter" {}
 variable "cluster" {}
 variable "datastore" {}
+variable "resource_pool" {}
 variable "template" {}
 variable "vm_num_cpus" {}
 variable "vm_memory" {}
