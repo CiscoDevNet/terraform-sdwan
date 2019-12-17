@@ -108,8 +108,8 @@ resource "vsphere_virtual_machine" "vm" {
       "enable-ssh-server" = "True"
       "hostname" = var.device_list[count.index].name
       "license" = "ax"
-      "login-username" = ""
-      "login-password" = ""
+      "login-username" = "admin"
+      "login-password" = "admin"
       "mgmt-interface" = "GigabitEthernet1"
       "mgmt-ipv4-addr" = lookup(var.device_list[count.index], "ipv4_address", "dhcp")
       "mgmt-ipv4-gateway" = lookup(var.device_list[count.index], "ipv4_gateway", "dhcp")
