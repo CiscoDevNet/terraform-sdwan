@@ -13,22 +13,32 @@ This repo contains terraform code for deploying the Cisco SD-WAN (Viptela) contr
     brew install cdrtools
     ```
 
-
-
 ## VMware
 
-In the vCenter UI, create the VM templates by deploying the Viptela OVF for vManage, vEdge and vSmart.
+### Creating the SD-WAN VM templates
 
-> Note: During the deploy, in the "Select storage" section, set the virtual disk format to "Thin provisioned" to make more efficient use of the datastore disk space.
+#### vManage, vSmart and vEdge
+In the vCenter UI, create the Viptela VM templates:
 
-Edit the settings of each VM template and:
+1. Deploy the Viptela OVF for vManage, vEdge and vSmart.
+1. In the "Select storage" section, set the virtual disk format to "Thin provisioned" to make more efficient use of the datastore disk space.
 
+After all of the OVFs have been deployed, edit the settings of each Viptela VM template and:
 1. Add a "SCSI Controller" of type "LSI Logic Parallel"
 1. Change "Hard disk 1" "Virtual Device Node" setting from "IDE 0" to "New SCSI controller"
 1. Click OK
 
 > Note: Do not add a second disk to the vManage template.  Terraform will do this dynamically.
 
+#### cEdge
+In the vCenter UI, create the VM template for CSR1000v w/SD-WAN (aka cEdge):
+1. Deploy the OVF (`csr1000v-ucmk9.16.12.1e.ova` or similar)
+1. In the "Select storage" section, set the virtual disk format to "Thin provisioned" to make more efficient use of the datastore disk space.
+1. In the "Customize template" section, just leave the values blank and click "Next".  Terraform will set these properties when it clones the VM.
+1. After the OVF is successfully deployed, power on the VM and watch the console until it finishes booting.  This will take several minutes.
+1. Once you see the login prompt, power down the VM.
+
+### Using terraform to deploy SD-WAN components
 Change to the vmware directory.
 
 ```
@@ -50,6 +60,7 @@ vmanage_template  = "viptela-vmanage-18.4.3-genericx86-64"
 vbond_template    = "viptela-edge-18.4.3-genericx86-64"
 vsmart_template   = "viptela-smart-18.4.3-genericx86-64"
 vedge_template    = "viptela-edge-18.4.3-genericx86-64"
+cedge_template    = "csr1000v-ucmk9.16.12.1e"
 
 vmanage_device_list = [
   {
@@ -98,6 +109,14 @@ vedge_device_list = [
     ipv4_address = "dhcp"
   }
 ]
+
+cedge_device_list = [
+  {
+    name = "cedge1"
+    networks = ["vmnetwork"]
+    ipv4_address = "dhcp"
+  }
+]
 ```
 
 > Note: the `networks` list is an ordered list of VM networks to use for each interface of the device.  For vManage/vSmart the order is eth0, eth1.  For vBond/vEdge the order is eth0, g0/0, g0/1, g0/2, g0/3.
@@ -141,6 +160,10 @@ vsmart_ip_addresses = [
 vedge_ip_addresses = [
   "192.168.1.208"
 ]
+cedge_ip_addresses = [
+  "192.168.1.214"
+]
+
 ```
 
 Stop the VMs and delete them from vCenter.
