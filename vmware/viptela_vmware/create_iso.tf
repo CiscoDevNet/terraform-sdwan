@@ -14,7 +14,7 @@ resource "null_resource" "iso" {
 
   triggers = {
     cloudinit = "${fileexists("${var.cloudinit_path}/user-data") ? filemd5("${var.cloudinit_path}/user-data") : ""}"
-    address = md5("${var.device_list[count.index].ipv4_address}")
+    address = md5(var.device_list[count.index].ipv4_address)
   #  gateway = md5("${var.device_list[count.index].ipv4_gateway}")
   #  device = "${join(",", template_dir.cloudinit.*.source_dir)}"
   #  device = "${template_dir.cloudinit[count.index].destination_dir}"
@@ -25,9 +25,9 @@ resource "null_resource" "iso" {
   }
 
   provisioner "local-exec" {
-    when    = "destroy"
+    when    = destroy
     command = "rm ${path.cwd}/ISO/${var.device_list[count.index].name}.iso"
-    on_failure = "continue"
+    on_failure = continue
   }
 
   depends_on = [
@@ -38,8 +38,8 @@ resource "null_resource" "iso" {
 resource "vsphere_file" "iso" {
   count = length(var.device_list)
 
-  datacenter       = "${var.datacenter}"
-  datastore        = "${var.iso_datastore}"
+  datacenter       = var.datacenter
+  datastore        = var.iso_datastore
   source_file      = "${path.cwd}/ISO/${var.device_list[count.index].name}.iso"
   destination_file = "${var.iso_path}/${var.device_list[count.index].name}.iso"
 
