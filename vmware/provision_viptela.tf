@@ -81,6 +81,7 @@ module "provision_cedge_vmware" {
   datacenter = "${var.datacenter}"
   cluster = "${var.cluster}"
   datastore = "${var.datastore}"
+  resource_pool = "${var.resource_pool}"
   template = "${var.cedge_template}"
   vm_num_cpus = 1
   vm_memory = 4096
