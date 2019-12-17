@@ -1,7 +1,7 @@
 provider "vsphere" {
-  user           = "${var.vsphere_user}"
-  password       = "${var.vsphere_password}"
-  vsphere_server = "${var.vsphere_server}"
+  user           = var.vsphere_user
+  password       = var.vsphere_password
+  vsphere_server = var.vsphere_server
 
   # If you have a self-signed cert
   allow_unverified_ssl = true
@@ -9,14 +9,14 @@ provider "vsphere" {
 
 module "provision_vmanage_vmware" {
   source = "./viptela_vmware"
-  device_list = "${var.vmanage_device_list}"
-  datacenter = "${var.datacenter}"
-  cluster = "${var.cluster}"
-  resource_pool = "${var.resource_pool}"
-  datastore = "${var.datastore}"
-  iso_datastore = "${var.iso_datastore}"
-  iso_path = "${var.iso_path}"
-  template = "${var.vmanage_template}"
+  device_list = var.vmanage_device_list
+  datacenter = var.datacenter
+  cluster = var.cluster
+  resource_pool = var.resource_pool
+  datastore = var.datastore
+  iso_datastore = var.iso_datastore
+  iso_path = var.iso_path
+  template = var.vmanage_template
   vm_num_cpus = 2
   vm_memory = 32768
   vm_add_disks = [100]
@@ -26,14 +26,14 @@ module "provision_vmanage_vmware" {
 
 module "provision_vsmart_vmware" {
   source = "./viptela_vmware"
-  device_list = "${var.vsmart_device_list}"
-  datacenter = "${var.datacenter}"
-  cluster = "${var.cluster}"
-  resource_pool = "${var.resource_pool}"
-  datastore = "${var.datastore}"
-  iso_datastore = "${var.iso_datastore}"
-  iso_path = "${var.iso_path}"
-  template = "${var.vsmart_template}"
+  device_list = var.vsmart_device_list
+  datacenter = var.datacenter
+  cluster = var.cluster
+  resource_pool = var.resource_pool
+  datastore = var.datastore
+  iso_datastore = var.iso_datastore
+  iso_path = var.iso_path
+  template = var.vsmart_template
   vm_num_cpus = 2
   vm_memory = 4096
   vm_add_disks = []
@@ -43,14 +43,14 @@ module "provision_vsmart_vmware" {
 
 module "provision_vbond_vmware" {
   source = "./viptela_vmware"
-  device_list = "${var.vbond_device_list}"
-  datacenter = "${var.datacenter}"
-  cluster = "${var.cluster}"
-  datastore = "${var.datastore}"
-  resource_pool = "${var.resource_pool}"
-  iso_datastore = "${var.iso_datastore}"
-  iso_path = "${var.iso_path}"
-  template = "${var.vbond_template}"
+  device_list = var.vbond_device_list
+  datacenter = var.datacenter
+  cluster = var.cluster
+  datastore = var.datastore
+  resource_pool = var.resource_pool
+  iso_datastore = var.iso_datastore
+  iso_path = var.iso_path
+  template = var.vbond_template
   vm_num_cpus = 2
   vm_memory = 4096
   vm_add_disks = []
@@ -60,14 +60,14 @@ module "provision_vbond_vmware" {
 
 module "provision_vedge_vmware" {
   source = "./viptela_vmware"
-  device_list = "${var.vedge_device_list}"
-  datacenter = "${var.datacenter}"
-  cluster = "${var.cluster}"
-  datastore = "${var.datastore}"
-  resource_pool = "${var.resource_pool}"
-  iso_datastore = "${var.iso_datastore}"
-  iso_path = "${var.iso_path}"
-  template = "${var.vedge_template}"
+  device_list = var.vedge_device_list
+  datacenter = var.datacenter
+  cluster = var.cluster
+  datastore = var.datastore
+  resource_pool = var.resource_pool
+  iso_datastore = var.iso_datastore
+  iso_path = var.iso_path
+  template = var.vedge_template
   vm_num_cpus = 2
   vm_memory = 4096
   vm_add_disks = []
@@ -77,12 +77,12 @@ module "provision_vedge_vmware" {
 
 module "provision_cedge_vmware" {
   source = "./cedge_vmware"
-  device_list = "${var.cedge_device_list}"
-  datacenter = "${var.datacenter}"
-  cluster = "${var.cluster}"
-  datastore = "${var.datastore}"
-  resource_pool = "${var.resource_pool}"
-  template = "${var.cedge_template}"
+  device_list = var.cedge_device_list
+  datacenter = var.datacenter
+  cluster = var.cluster
+  datastore = var.datastore
+  resource_pool = var.resource_pool
+  template = var.cedge_template
   vm_num_cpus = 1
   vm_memory = 4096
   vm_add_disks = []
