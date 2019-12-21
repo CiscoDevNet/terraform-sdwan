@@ -21,9 +21,9 @@ spec:
         value: ""
 ''') {
     node(POD_LABEL) {
-        def terraform 
         git 'https://github.com/ciscops/colabot.git'
         container('docker') {
+            pipeline {
             agent {
                 docker {
                     image 'hashicorp/terraform:0.12.18'
@@ -37,6 +37,7 @@ spec:
                 stage('Test terraform') {
                     sh 'terraform --version'
                 }
+            }
             }
         }
     }
