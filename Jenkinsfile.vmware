@@ -27,13 +27,8 @@ spec:
             stage('Clone repository') {
                 checkout scm
             }
-            stage('Pull image') {
-                terraform = docker.image("hashicorp/terraform:0.12.18")
-            }
-            stage('Test image') {
-                terraform.inside {
-                    sh 'terraform --version'
-                }
+            stage('Test terraform') {
+                sh 'docker run -it hashicorp/terraform:0.12.18 --version'
             }
         }
     }
