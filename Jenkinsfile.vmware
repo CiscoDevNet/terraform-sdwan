@@ -21,14 +21,22 @@ spec:
         value: ""
 ''') {
     node(POD_LABEL) {
-        def terraform
+        def terraform 
         git 'https://github.com/ciscops/colabot.git'
         container('docker') {
-            stage('Clone repository') {
-                checkout scm
+            agent {
+                docker {
+                    image 'hashicorp/terraform:0.12.18'
+                    args '--entrypoint /bin/ash'
+                }
             }
-            stage('Test terraform') {
-                sh 'docker run -it hashicorp/terraform:0.12.18 --version'
+            stages {
+                stage('Clone repository') {
+                    checkout scm
+                }
+                stage('Test terraform') {
+                    sh 'terraform --version'
+                }
             }
         }
     }
