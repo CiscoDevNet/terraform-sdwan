@@ -19,13 +19,17 @@ spec:
   }
   stages {
     stage('Clone repository') {
-      container('terraform') {
-        checkout scm
+      steps {
+        container('terraform') {
+          checkout scm
+        }
       }
     }
     stage('Terraform init') {
-      container('terraform') {
-        sh 'terraform init'
+      steps {
+        container('terraform') {
+          sh 'terraform init'
+        }
       }
     }
   }
