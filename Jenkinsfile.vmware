@@ -47,5 +47,14 @@ spec:
         }
       }
     }
+    stage('Terraform destroy') {
+      steps {
+        configFileProvider([configFile(fileId: 'terraform-rtp.tfvars', targetLocation: 'vmware/terraform.tfvars')]) {
+          container('terraform') {
+            sh 'cd vmware && terraform destroy'
+          }
+        }
+      }
+    }
   }
 }
