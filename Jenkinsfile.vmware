@@ -19,7 +19,7 @@ spec:
   stages {
     stage('Terraform init') {
       steps {
-        git 'https://github.com/CiscoDevNet/terraform-sdwan.git'
+        checkout scm
         container('terraform') {
           sh 'terraform init'
         }
