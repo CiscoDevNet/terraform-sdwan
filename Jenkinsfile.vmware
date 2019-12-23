@@ -7,7 +7,7 @@ kind: Pod
 spec:
   containers:
   - name: terraform
-    image: hashicorp/terraform:0.12.18
+    image: jasonking/terraform-sdwan
     command:
     - sleep
     args:
