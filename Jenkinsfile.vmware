@@ -21,8 +21,7 @@ spec:
       steps {
         checkout scm
         container('terraform') {
-          sh 'cd vmware'
-          sh 'terraform init'
+          sh 'cd vmware && terraform init'
         }
       }
     }
