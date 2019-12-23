@@ -33,6 +33,7 @@ spec:
     stage('Terraform plan') {
       steps {
         container('terraform') {
+          sh 'echo $TF_VARS'
           sh 'cd vmware && terraform  -var-file=$TF_VARS plan'
         }
       }
