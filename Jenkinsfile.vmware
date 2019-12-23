@@ -19,7 +19,6 @@ spec:
   stages {
     stage('Terraform init') {
       steps {
-        checkout scm
         container('terraform') {
           sh 'cd vmware && terraform init'
         }
