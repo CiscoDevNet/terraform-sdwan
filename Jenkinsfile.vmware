@@ -42,7 +42,7 @@ spec:
       steps {
         configFileProvider([configFile(fileId: 'terraform-rtp.tfvars', targetLocation: 'vmware/terraform.tfvars')]) {
           container('terraform') {
-            sh 'cd vmware && terraform apply'
+            sh 'cd vmware && terraform apply -auto-approve'
           }
         }
       }
@@ -51,7 +51,7 @@ spec:
       steps {
         configFileProvider([configFile(fileId: 'terraform-rtp.tfvars', targetLocation: 'vmware/terraform.tfvars')]) {
           container('terraform') {
-            sh 'cd vmware && terraform destroy'
+            sh 'cd vmware && terraform destroy -auto-approve'
           }
         }
       }
