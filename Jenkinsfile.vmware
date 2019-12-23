@@ -33,7 +33,7 @@ spec:
       steps {
         configFileProvider([configFile(fileId: 'terraform-rtp.tfvars', targetLocation: 'vmware/terraform.tfvars')]) {
           container('terraform') {
-            sh 'cd vmware && terraform  -var-file=$TF_VARS plan'
+            sh 'cd vmware && terraform plan'
           }
         }
       }
