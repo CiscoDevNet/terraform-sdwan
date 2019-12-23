@@ -24,5 +24,19 @@ spec:
         }
       }
     }
+    stage('Terraform plan') {
+      steps {
+        container('terraform') {
+          sh 'cd vmware && terraform plan'
+        }
+      }
+    }
+    stage('Terraform apply') {
+      steps {
+        container('terraform') {
+          sh 'cd vmware && terraform apply'
+        }
+      }
+    }
   }
 }
