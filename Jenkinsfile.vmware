@@ -16,6 +16,11 @@ spec:
 """
     }
   }
+  environment {
+      TF_VAR_vsphere_user = credentials('cpn-rtp-vc1-username')
+      TF_VAR_vsphere_password = credentials('cpn-rtp-vc1-password')
+      TF_VAR_vsphere_server = credentials('cpn-rtp-vc1-server')
+  }
   stages {
     stage('Terraform init') {
       steps {
