@@ -15,20 +15,17 @@ resource "null_resource" "iso" {
   triggers = {
     cloudinit = "${fileexists("${var.cloudinit_path}/user-data") ? filemd5("${var.cloudinit_path}/user-data") : ""}"
     address = md5(var.device_list[count.index].ipv4_address)
-  #  gateway = md5("${var.device_list[count.index].ipv4_gateway}")
-  #  device = "${join(",", template_dir.cloudinit.*.source_dir)}"
-  #  device = "${template_dir.cloudinit[count.index].destination_dir}"
   }
 
   provisioner "local-exec" {
     command = "mkisofs -output ${path.cwd}/ISO/${var.device_list[count.index].name}.iso -volid cidata -joliet -rock ${path.cwd}/ISO/${var.device_list[count.index].name}/user-data ${path.cwd}/ISO/${var.device_list[count.index].name}/meta-data"
   }
 
-  provisioner "local-exec" {
-    when    = destroy
-    command = "rm ${path.cwd}/ISO/${var.device_list[count.index].name}.iso"
-    on_failure = continue
-  }
+  # provisioner "local-exec" {
+  #   when    = destroy
+  #   command = "rm ${path.cwd}/ISO/${var.device_list[count.index].name}.iso"
+  #   on_failure = continue
+  # }
 
   depends_on = [
     template_dir.cloudinit
