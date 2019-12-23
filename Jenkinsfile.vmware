@@ -35,8 +35,8 @@ spec:
     }
     stage('Terraform plan') {
       steps {
-        container('terraform') {
-          configFileProvider([configFile(fileId: 'terraform-rtp.tfvars', targetLocation: 'terraform.tfvars')]) {
+        configFileProvider([configFile(fileId: 'terraform-rtp.tfvars', targetLocation: 'terraform.tfvars')]) {
+          container('terraform') {
             sh 'cd vmware && terraform plan'
           }
         }
@@ -45,9 +45,7 @@ spec:
     stage('Terraform apply') {
       steps {
         container('terraform') {
-          configFileProvider([configFile(fileId: 'terraform-rtp.tfvars', targetLocation: 'terraform.tfvars')]) {
-            sh 'cd vmware && terraform apply'
-          }
+          sh 'cd vmware && terraform apply'
         }
       }
     }
