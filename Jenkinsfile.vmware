@@ -17,16 +17,10 @@ spec:
     }
   }
   stages {
-    stage('Clone repository') {
-      steps {
-        container('terraform') {
-          checkout scm
-        }
-      }
-    }
     stage('Terraform init') {
       steps {
         container('terraform') {
+          sh 'cd terraform-sdwan/vmware'
           sh 'terraform init'
         }
       }
