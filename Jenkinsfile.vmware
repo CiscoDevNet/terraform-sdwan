@@ -20,6 +20,7 @@ spec:
       TF_VAR_vsphere_user = credentials('cpn-rtp-vc1-username')
       TF_VAR_vsphere_password = credentials('cpn-rtp-vc1-password')
       TF_VAR_vsphere_server = credentials('cpn-rtp-vc1-server')
+      TF_VARS = credentials('terraform-rtp.tfvars')
   }
   stages {
     stage('Terraform init') {
@@ -31,10 +32,8 @@ spec:
     }
     stage('Terraform plan') {
       steps {
-        configFileProvider([configFile(fileId: 'terraform-rtp.tfvars', targetLocation: 'vmware/terraform.tfvars')]) {
-          container('terraform') {
-            sh 'cd vmware && terraform plan'
-          }
+        container('terraform') {
+          sh 'cd vmware && terraform  -var-file=$TF_VARS plan'
         }
       }
     }
