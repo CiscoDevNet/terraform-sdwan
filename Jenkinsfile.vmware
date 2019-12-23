@@ -21,10 +21,6 @@ spec:
       TF_VAR_vsphere_password = credentials('cpn-rtp-vc1-password')
       TF_VAR_vsphere_server = credentials('cpn-rtp-vc1-server')
   }
-      configFileProvider(
-        [configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
-        sh 'mvn -s $MAVEN_SETTINGS clean package'
-    }
   stages {
     stage('Terraform init') {
       steps {
