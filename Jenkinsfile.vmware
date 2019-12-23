@@ -1,17 +1,6 @@
 pipeline {
   agent {
     kubernetes {
-      yaml """
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: terraform
-    image: hashicorp/terraform:0.12.18
-    command:
-    - sleep
-    tty: true
-"""
     }
   }
   stages {
