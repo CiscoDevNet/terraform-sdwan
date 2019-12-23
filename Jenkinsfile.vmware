@@ -21,7 +21,6 @@ spec:
       steps {
         git 'https://github.com/CiscoDevNet/terraform-sdwan.git'
         container('terraform') {
-          sh 'cd terraform-sdwan/vmware'
           sh 'terraform init'
         }
       }
