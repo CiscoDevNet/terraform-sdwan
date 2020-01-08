@@ -1,0 +1,64 @@
+pipeline {
+  agent {
+    kubernetes {
+      yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: terraform
+    image: jasonking/terraform-sdwan
+    command:
+    - sleep
+    args:
+    - 99d
+    tty: true
+"""
+    }
+  }
+  options {
+    disableConcurrentBuilds()
+    lock resource: 'jenkins_terraform_sdwan'
+  }
+  environment {
+      TF_VAR_vsphere_user = credentials('cpn-rtp-vc1-username')
+      TF_VAR_vsphere_password = credentials('cpn-rtp-vc1-password')
+      TF_VAR_vsphere_server = credentials('cpn-rtp-vc1-server')
+  }
+  stages {
+    stage('Terraform init') {
+      steps {
+        container('terraform') {
+          sh 'cd vmware && terraform init'
+        }
+      }
+    }
+    stage('Terraform plan') {
+      steps {
+        configFileProvider([configFile(fileId: 'terraform-rtp.tfvars', targetLocation: 'vmware/terraform.tfvars')]) {
+          container('terraform') {
+            sh 'cd vmware && terraform plan'
+          }
+        }
+      }
+    }
+    stage('Terraform apply') {
+      steps {
+        configFileProvider([configFile(fileId: 'terraform-rtp.tfvars', targetLocation: 'vmware/terraform.tfvars')]) {
+          container('terraform') {
+            sh 'cd vmware && terraform apply -auto-approve'
+          }
+        }
+      }
+    }
+    stage('Terraform destroy') {
+      steps {
+        configFileProvider([configFile(fileId: 'terraform-rtp.tfvars', targetLocation: 'vmware/terraform.tfvars')]) {
+          container('terraform') {
+            sh 'cd vmware && terraform destroy -auto-approve'
+          }
+        }
+      }
+    }
+  }
+}
