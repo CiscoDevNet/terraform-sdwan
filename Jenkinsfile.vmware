@@ -16,6 +16,10 @@ spec:
 """
     }
   }
+  options {
+    disableConcurrentBuilds()
+    lock resource: 'jenkins_terraform_sdwan'
+  }
   environment {
       TF_VAR_vsphere_user = credentials('cpn-rtp-vc1-username')
       TF_VAR_vsphere_password = credentials('cpn-rtp-vc1-password')
