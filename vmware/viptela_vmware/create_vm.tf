@@ -67,6 +67,9 @@ resource "vsphere_virtual_machine" "vm" {
   guest_id  = data.vsphere_virtual_machine.template[0].guest_id
   scsi_type = data.vsphere_virtual_machine.template[0].scsi_type
 
+  ignored_guest_ips = ["127.1.0.1"]
+  wait_for_guest_net_routable = false
+
   disk {
     label            = "disk0"
     size             = data.vsphere_virtual_machine.template[0].disks.0.size
