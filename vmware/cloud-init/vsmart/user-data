@@ -6,6 +6,11 @@ Content-Type: text/cloud-boothook; charset="us-ascii"
 
 #cloud-boothook
 !
+system 
+ aaa
+  user admin
+   password admin
+!
 vpn 0
  %{ if ipv4_gateway != ""}
  ip route 0.0.0.0/0 ${ipv4_gateway}
