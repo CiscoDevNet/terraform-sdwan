@@ -1,46 +1,68 @@
-variable "vsphere_user" {}
-variable "vsphere_password" {}
-variable "vsphere_server" {}
+variable "vsphere_user" {
+  type = string
+}
+variable "vsphere_password" {
+  type = string
+}
+variable "vsphere_server" {
+  type = string
+}
 variable "vmanage_template" {
+  type = string
   default = ""
 }
 variable "vbond_template" {
+  type = string
   default = ""
 }
 variable "vedge_template" {
+  type = string
   default = ""
 }
 variable "vsmart_template" {
+  type = string
   default = ""
 }
 variable "cedge_template" {
+  type = string
   default = ""
 }
-variable "datacenter" {}
-variable "cluster" {}
-variable "datastore" {}
+variable "datacenter" {
+  type = string
+}
+variable "cluster" {
+  type = string
+}
+variable "datastore" {
+  type = string
+}
 variable "resource_pool" {
+  type = string
   default = ""
 }
-variable "iso_datastore" {}
-variable "iso_path" {}
+variable "iso_datastore" {
+  type = string
+}
+variable "iso_path" {
+  type = string
+}
 variable "vmanage_device_list" {
-  type = any
-  default = []
+  type = map(object({}))
+  default = {}
 }
 variable "vsmart_device_list" {
-  type = any
-  default = []
+  type = map(object({}))
+  default = {}
 }
 variable "vbond_device_list" {
-  type = any
-  default = []
+  type = map(object({}))
+  default = {}
 }
 variable "vedge_device_list" {
-  type = any
-  default = []
+  type = map(object({}))
+  default = {}
 }
 variable "cedge_device_list" {
-  type = any
-  default = []
+  type = map(object({}))
+  default = {}
 }
