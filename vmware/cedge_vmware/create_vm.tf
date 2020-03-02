@@ -6,14 +6,14 @@ locals {
       for network_key, network in device.networks : {
         device_key  = device_key
         network_key = network_key
-        network_name  = var.device_list[device_key].networks[network_key]
+        network_name  = network
       }
     ]
   ])
 }
 
 data "vsphere_datacenter" "dc" {
-  name = "${var.datacenter}"
+  name = var.datacenter
 }
 
 data "vsphere_compute_cluster" "compute_cluster" {
@@ -50,16 +50,16 @@ data "vsphere_virtual_machine" "template" {
 }
 
 resource "vsphere_virtual_machine" "vm" {
-  count = length(var.device_list)
+  for_each = var.device_list
 
-  name              = var.device_list[count.index].name
+  name              = each.key
   resource_pool_id  = var.resource_pool == "" ? data.vsphere_compute_cluster.compute_cluster.resource_pool_id : data.vsphere_resource_pool.resource_pool[0].id
   datastore_id      = data.vsphere_datastore.datastore.id
 
-  num_cpus  = var.vm_num_cpus
-  memory    = var.vm_memory
-  guest_id  = data.vsphere_virtual_machine.template[0].guest_id
-  scsi_type = data.vsphere_virtual_machine.template[0].scsi_type
+  num_cpus          = var.vm_num_cpus
+  memory            = var.vm_memory
+  guest_id          = data.vsphere_virtual_machine.template[0].guest_id
+  scsi_type         = data.vsphere_virtual_machine.template[0].scsi_type
 
   ignored_guest_ips = ["192.168.1.1"]
   wait_for_guest_net_routable = false
@@ -88,10 +88,10 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   dynamic "network_interface" {
-    for_each = var.device_list[count.index].networks
+    for_each = each.value.networks
 
     content {
-      network_id   = data.vsphere_network.network["${count.index}.${network_interface.key}"].id
+      network_id   = data.vsphere_network.network["${each.key}.${network_interface.key}"].id
       adapter_type = data.vsphere_virtual_machine.template[0].network_interface_types[0]
     }
   }
@@ -106,13 +106,13 @@ resource "vsphere_virtual_machine" "vm" {
       "domain-name" = ""
       "enable-scp-server" = "True"
       "enable-ssh-server" = "True"
-      "hostname" = var.device_list[count.index].name
+      "hostname" = each.key
       "license" = "ax"
       "login-username" = "admin"
       "login-password" = "admin"
       "mgmt-interface" = "GigabitEthernet1"
-      "mgmt-ipv4-addr" = lookup(var.device_list[count.index], "ipv4_address", "dhcp")
-      "mgmt-ipv4-gateway" = lookup(var.device_list[count.index], "ipv4_gateway", "dhcp")
+      "mgmt-ipv4-addr" = lookup(each.value, "ipv4_address", "dhcp")
+      "mgmt-ipv4-gateway" = lookup(each.value, "ipv4_gateway", "dhcp")
       "mgmt-ipv4-network" =""
       "mgmt-vlan" = "1"
       "pnsc-agent-local-port" = ""
