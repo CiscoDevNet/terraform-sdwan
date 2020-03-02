@@ -26,5 +26,5 @@ variable "vm_thin_provisioned" {
   type = bool
 }
 variable "device_list" {
-  type = map(object({}))
+  type = any
 }

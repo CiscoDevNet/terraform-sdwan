@@ -47,22 +47,22 @@ variable "iso_path" {
   type = string
 }
 variable "vmanage_device_list" {
-  type = map(object({}))
+  type = any
   default = {}
 }
 variable "vsmart_device_list" {
-  type = map(object({}))
+  type = any
   default = {}
 }
 variable "vbond_device_list" {
-  type = map(object({}))
+  type = any
   default = {}
 }
 variable "vedge_device_list" {
-  type = map(object({}))
+  type = any
   default = {}
 }
 variable "cedge_device_list" {
-  type = map(object({}))
+  type = any
   default = {}
 }

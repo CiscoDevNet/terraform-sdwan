@@ -33,6 +33,7 @@ variable "vm_thin_provisioned" {
 }
 
 # The device_list object keys should have type constraints, but ipv4_gateway is optional
+# and terraform doesn't currently have a way to match multiple object signatures
 #
 # type = map(object({
 #   networks = list(string)
@@ -41,7 +42,7 @@ variable "vm_thin_provisioned" {
 # }))
 
 variable "device_list" {
-  type = map(object({}))
+  type = any
 }
 variable "cloudinit_path" {
   type = string
