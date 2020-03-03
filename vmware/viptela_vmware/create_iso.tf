@@ -1,6 +1,6 @@
 resource "template_dir" "cloudinit" {
   for_each        = var.device_list
-  source_dir      = "${path.root}/${var.cloudinit_path}"
+  source_dir      = var.cloudinit_path
   destination_dir = "${path.cwd}/ISO/${each.key}"
 
   vars = {
