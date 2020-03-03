@@ -15,16 +15,17 @@ resource "null_resource" "iso" {
   triggers = {
     cloudinit = fileexists("${var.cloudinit_path}/user-data") ? filemd5("${var.cloudinit_path}/user-data") : ""
     address   = md5(each.value.ipv4_address)
-    path      = path.cwd
+    data_dir  = "${path.cwd}/ISO/${each.key}"
+    iso_file  = "${path.cwd}/ISO/${each.key}.iso"
   }
 
   provisioner "local-exec" {
-    command = "mkisofs -output ${self.triggers.path}/ISO/${each.key}.iso -volid cidata -joliet -rock ${self.triggers.path}/ISO/${each.key}/user-data ${self.triggers.path}/ISO/${each.key}/meta-data"
+    command = "mkisofs -output ${self.triggers.iso_file} -volid cidata -joliet -rock ${self.triggers.data_dir}/user-data ${self.triggers.data_dir}/meta-data"
   }
 
   provisioner "local-exec" {
     when       = destroy
-    command    = "rm ${self.triggers.path}/ISO/${each.key}.iso"
+    command    = "rm ${self.triggers.iso_file}"
     on_failure = continue
   }
 
