@@ -1,31 +1,34 @@
 resource "template_dir" "cloudinit" {
-  count = length(var.device_list)
-  source_dir      = "${path.root}/${var.cloudinit_path}"
-  destination_dir = "${path.cwd}/ISO/${var.device_list[count.index].name}"
+  for_each        = var.device_list
+  source_dir      = var.cloudinit_path
+  destination_dir = "${path.cwd}/ISO/${each.key}"
 
   vars = {
-    ipv4_address = lookup(var.device_list[count.index], "ipv4_address", "dhcp")
-    ipv4_gateway = lookup(var.device_list[count.index], "ipv4_gateway", "")
+    ipv4_address = lookup(each.value, "ipv4_address", "dhcp")
+    ipv4_gateway = lookup(each.value, "ipv4_gateway", "")
   }
 }
 
 resource "null_resource" "iso" {
-  count = length(var.device_list)
+  for_each = var.device_list
 
   triggers = {
-    cloudinit = "${fileexists("${var.cloudinit_path}/user-data") ? filemd5("${var.cloudinit_path}/user-data") : ""}"
-    address = md5(var.device_list[count.index].ipv4_address)
+    cloudinit = fileexists("${var.cloudinit_path}/user-data") ? filemd5("${var.cloudinit_path}/user-data") : ""
+    address   = md5(each.value.ipv4_address)
+    data_dir  = "${path.cwd}/ISO/${each.key}"
+    iso_file  = "${path.cwd}/ISO/${each.key}.iso"
   }
 
   provisioner "local-exec" {
-    command = "mkisofs -output ${path.cwd}/ISO/${var.device_list[count.index].name}.iso -volid cidata -joliet -rock ${path.cwd}/ISO/${var.device_list[count.index].name}/user-data ${path.cwd}/ISO/${var.device_list[count.index].name}/meta-data"
+    command = "mkisofs -output ${self.triggers.iso_file} -volid cidata -joliet -rock ${self.triggers.data_dir}/user-data ${self.triggers.data_dir}/meta-data"
   }
 
-  # provisioner "local-exec" {
-  #   when    = destroy
-  #   command = "rm ${path.cwd}/ISO/${var.device_list[count.index].name}.iso"
-  #   on_failure = continue
-  # }
+  # Requires terraform 0.12.23+ for issue #24139 fix (for_each destroy provisioner in module)
+  provisioner "local-exec" {
+    when       = destroy
+    command    = "rm ${self.triggers.iso_file}"
+    on_failure = continue
+  }
 
   depends_on = [
     template_dir.cloudinit
@@ -33,12 +36,12 @@ resource "null_resource" "iso" {
 }
 
 resource "vsphere_file" "iso" {
-  count = length(var.device_list)
+  for_each         = var.device_list
 
   datacenter       = var.datacenter
   datastore        = var.iso_datastore
-  source_file      = "${path.cwd}/ISO/${var.device_list[count.index].name}.iso"
-  destination_file = "${var.iso_path}/${var.device_list[count.index].name}.iso"
+  source_file      = "${path.cwd}/ISO/${each.key}.iso"
+  destination_file = "${var.iso_path}/${each.key}.iso"
 
   depends_on = [
     null_resource.iso,
