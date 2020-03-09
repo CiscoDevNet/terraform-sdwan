@@ -1,3 +1,3 @@
 output "ip_addresses" {
-  value = vsphere_virtual_machine.vm.*.default_ip_address
+  value = [for v in vsphere_virtual_machine.vm : v.default_ip_address]
 }
