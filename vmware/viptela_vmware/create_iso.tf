@@ -23,7 +23,7 @@ resource "null_resource" "iso" {
     command = "mkisofs -output ${self.triggers.iso_file} -volid cidata -joliet -rock ${self.triggers.data_dir}/user-data ${self.triggers.data_dir}/meta-data"
   }
 
-  # Requires terraform 0.12.22 for issue #24139 fix (for_each destroy provisioner in module)
+  # Requires terraform 0.12.23+ for issue #24139 fix (for_each destroy provisioner in module)
   provisioner "local-exec" {
     when       = destroy
     command    = "rm ${self.triggers.iso_file}"
