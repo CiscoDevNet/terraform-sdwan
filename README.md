@@ -62,61 +62,53 @@ vsmart_template   = "viptela-smart-18.4.3-genericx86-64"
 vedge_template    = "viptela-edge-18.4.3-genericx86-64"
 cedge_template    = "csr1000v-ucmk9.16.12.1e"
 
-vmanage_device_list = [
-  {
-    name = "vmanage1"
+vmanage_device_list = {
+  "vmanage1" = {
     networks = ["vmnetwork","vmnetwork"]
     ipv4_address = "192.168.1.2/24"
     ipv4_gateway = "192.168.1.1"
   },
-  {
-    name = "vmanage2"
+  "vmanage2" = {
     networks = ["vmnetwork","vmnetwork"]
     ipv4_address = "dhcp"
   }
-]
+}
 
-vsmart_device_list = [
-  {
-    name = "vsmart1"
+vsmart_device_list = {
+  "vsmart1" = {
     networks = ["vmnetwork","vmnetwork"]
     ipv4_address = "dhcp"
   },
-  {
-    name = "vsmart2"
+  "vsmart2" = {
     networks = ["vmnetwork","vmnetwork"]
     ipv4_address = "dhcp"
   }
-]
+}
 
-vbond_device_list = [
-  {
-    name = "vbond1"
+vbond_device_list = {
+  "vbond1" = {
     networks = ["vmnetwork","vmnetwork"]
     ipv4_address = "dhcp"
   },
-  {
-    name = "vbond2"
+  "vbond2" = {
     networks = ["vmnetwork","vmnetwork"]
     ipv4_address = "dhcp"
   }
-]
+}
 
-vedge_device_list = [
-  {
-    name = "vedge1"
+vedge_device_list = {
+  "vedge1" = {
     networks = ["vmnetwork","vmnetwork","vmnetwork"]
     ipv4_address = "dhcp"
   }
-]
+}
 
-cedge_device_list = [
-  {
-    name = "cedge1"
+cedge_device_list = {
+  "cedge1" = {
     networks = ["vmnetwork"]
     ipv4_address = "dhcp"
   }
-]
+}
 ```
 
 > Note: the `networks` list is an ordered list of VM networks to use for each interface of the device.  For vManage/vSmart the order is eth0, eth1.  For vBond/vEdge the order is eth0, g0/0, g0/1, g0/2, g0/3.
