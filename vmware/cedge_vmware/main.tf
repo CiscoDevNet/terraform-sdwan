@@ -54,6 +54,7 @@ resource "vsphere_virtual_machine" "vm" {
 
   name              = each.key
   resource_pool_id  = var.resource_pool == "" ? data.vsphere_compute_cluster.compute_cluster.resource_pool_id : data.vsphere_resource_pool.resource_pool[0].id
+  folder            = var.folder
   datastore_id      = data.vsphere_datastore.datastore.id
 
   num_cpus          = var.vm_num_cpus
@@ -103,24 +104,24 @@ resource "vsphere_virtual_machine" "vm" {
   vapp {
     properties = {
       # "config-version" = "1.0"
-      "domain-name" = ""
+      # "domain-name" = ""
       "enable-scp-server" = "True"
       "enable-ssh-server" = "True"
       "hostname" = each.key
-      "license" = "ax"
+      # "license" = "ax"
       "login-username" = "admin"
-      "login-password" = "admin"
-      "mgmt-interface" = "GigabitEthernet1"
+      # "login-password" = "admin"
+      # "mgmt-interface" = "GigabitEthernet1"
       "mgmt-ipv4-addr" = lookup(each.value, "ipv4_address", "dhcp")
       "mgmt-ipv4-gateway" = lookup(each.value, "ipv4_gateway", "dhcp")
-      "mgmt-ipv4-network" =""
+      # "mgmt-ipv4-network" =""
       "mgmt-vlan" = "1"
-      "pnsc-agent-local-port" = ""
-      "pnsc-ipv4-addr" = ""
-      "pnsc-shared-secret-key" = ""
-      "privilege-password" = ""
-      "remote-mgmt-ipv4-addr" = ""
-      "resource-template" = "default"
+      # "pnsc-agent-local-port" = ""
+      # "pnsc-ipv4-addr" = ""
+      # "pnsc-shared-secret-key" = ""
+      # "privilege-password" = ""
+      # "remote-mgmt-ipv4-addr" = ""
+      # "resource-template" = "default"
     }
   }
 }

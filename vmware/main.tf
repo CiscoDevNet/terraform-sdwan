@@ -7,12 +7,25 @@ provider "vsphere" {
   allow_unverified_ssl = true
 }
 
+data "vsphere_datacenter" "dc" {
+  name = var.datacenter
+}
+
+resource "vsphere_folder" "folder" {
+  count         = var.folder == "" ? 0 : 1
+
+  path          = var.folder
+  type          = "vm"
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
 module "provision_vmanage_vmware" {
   source = "./viptela_vmware"
   device_list = var.vmanage_device_list
   datacenter = var.datacenter
   cluster = var.cluster
   resource_pool = var.resource_pool
+  folder = var.folder == "" ? "" : "${vsphere_folder.folder[0].path}"
   datastore = var.datastore
   iso_datastore = var.iso_datastore
   iso_path = var.iso_path
@@ -30,6 +43,7 @@ module "provision_vsmart_vmware" {
   datacenter = var.datacenter
   cluster = var.cluster
   resource_pool = var.resource_pool
+  folder = var.folder == "" ? "" : "${vsphere_folder.folder[0].path}"
   datastore = var.datastore
   iso_datastore = var.iso_datastore
   iso_path = var.iso_path
@@ -48,6 +62,7 @@ module "provision_vbond_vmware" {
   cluster = var.cluster
   datastore = var.datastore
   resource_pool = var.resource_pool
+  folder = var.folder == "" ? "" : "${vsphere_folder.folder[0].path}"
   iso_datastore = var.iso_datastore
   iso_path = var.iso_path
   template = var.vbond_template
@@ -65,6 +80,7 @@ module "provision_vedge_vmware" {
   cluster = var.cluster
   datastore = var.datastore
   resource_pool = var.resource_pool
+  folder = var.folder == "" ? "" : "${vsphere_folder.folder[0].path}"
   iso_datastore = var.iso_datastore
   iso_path = var.iso_path
   template = var.vedge_template
@@ -82,6 +98,7 @@ module "provision_cedge_vmware" {
   cluster = var.cluster
   datastore = var.datastore
   resource_pool = var.resource_pool
+  folder = var.folder == "" ? "" : "${vsphere_folder.folder[0].path}"
   template = var.cedge_template
   vm_num_cpus = 1
   vm_memory = 4096
