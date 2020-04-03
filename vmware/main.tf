@@ -1,3 +1,7 @@
+terraform {
+  required_version = ">= 0.12.23"
+}
+
 provider "vsphere" {
   user           = var.vsphere_user
   password       = var.vsphere_password
