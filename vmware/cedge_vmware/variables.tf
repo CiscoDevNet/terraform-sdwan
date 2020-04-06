@@ -7,6 +7,9 @@ variable "cluster" {
 variable "datastore" {
   type = string
 }
+variable "folder" {
+  type = string
+}
 variable "resource_pool" {
   type = string
 }

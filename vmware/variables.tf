@@ -36,6 +36,9 @@ variable "cluster" {
 variable "datastore" {
   type = string
 }
+variable "folder" {
+  default = ""
+}
 variable "resource_pool" {
   type = string
   default = ""

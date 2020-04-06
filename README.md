@@ -54,6 +54,7 @@ vsphere_server    = vc1.xyz.com
 datacenter        = "xyz-datacenter"
 cluster           = "xyz-cluster"
 datastore         = "datastore1"
+folder            = "folder1"
 iso_datastore     = "datastore1"
 iso_path          = "cloud-init"
 vmanage_template  = "viptela-vmanage-18.4.3-genericx86-64"
@@ -116,6 +117,8 @@ cedge_device_list = {
 > Note: the `*_template`, `datacenter`, `cluster`, `datastore` and `iso_datastore` values should be set to the names of the respective objects in vCenter.
 
 > Note: `ipv4_address` is applied to VPN 0 must be set to either "dhcp" or a static IP address in address/prefix-length notation (i.e. 192.168.0.2/24).  When specifying a static IP address, `ipv4_gateway` is also required.
+
+> Note: `folder` is the VM folder to place all VMs.  It is optional.  If it is not specified then all VMs will be placed at the root of the datacenter.
 
 You can set the server and login credentials for vCenter in your environment if you do not want to put these in the `terraform.tfvars` file.  Example:
 

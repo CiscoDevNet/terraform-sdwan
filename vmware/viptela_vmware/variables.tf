@@ -10,6 +10,9 @@ variable "resource_pool" {
 variable "datastore" {
   type = string
 }
+variable "folder" {
+  type = string
+}
 variable "iso_datastore" {
   type = string
 }

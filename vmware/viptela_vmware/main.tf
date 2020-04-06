@@ -60,6 +60,7 @@ resource "vsphere_virtual_machine" "vm" {
 
   name              = each.key
   resource_pool_id  = var.resource_pool == "" ? data.vsphere_compute_cluster.compute_cluster.resource_pool_id : data.vsphere_resource_pool.resource_pool[0].id
+  folder            = var.folder
   datastore_id      = data.vsphere_datastore.datastore.id
 
   num_cpus          = var.vm_num_cpus
