@@ -62,7 +62,7 @@ resource "vsphere_virtual_machine" "vm" {
   guest_id          = data.vsphere_virtual_machine.template[0].guest_id
   scsi_type         = data.vsphere_virtual_machine.template[0].scsi_type
 
-  ignored_guest_ips = ["192.168.1.1"]
+  ignored_guest_ips = ["192.168.1.1", "0.0.0.0"]
   wait_for_guest_net_routable = false
 
   cdrom {
