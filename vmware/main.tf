@@ -103,9 +103,12 @@ module "provision_cedge_vmware" {
   datastore = var.datastore
   resource_pool = var.resource_pool
   folder = var.folder == "" ? "" : "${vsphere_folder.folder[0].path}"
+  iso_datastore = var.iso_datastore
+  iso_path = var.iso_path
   template = var.cedge_template
   vm_num_cpus = 1
   vm_memory = 4096
   vm_add_disks = []
   vm_thin_provisioned = true
+  cloudinit_path = "${path.root}/cloud-init/cedge/"
 }

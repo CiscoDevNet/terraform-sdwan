@@ -92,7 +92,7 @@ resource "vsphere_virtual_machine" "vm" {
 
   cdrom {
     datastore_id = data.vsphere_datastore.iso_datastore.id
-    path         = "${var.iso_path}/${each.key}.iso"
+    path         = "${var.iso_path}/${var.folder}/${each.key}.iso"
   }
 
   dynamic "network_interface" {

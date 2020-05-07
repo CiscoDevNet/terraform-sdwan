@@ -6,6 +6,10 @@ resource "template_dir" "cloudinit" {
   vars = {
     ipv4_address = lookup(each.value, "ipv4_address", "dhcp")
     ipv4_gateway = lookup(each.value, "ipv4_gateway", "")
+    otp          = lookup(each.value, "otp", "")
+    vbond        = lookup(each.value, "vbond", "")
+    uuid         = lookup(each.value, "uuid", "")
+    org          = lookup(each.value, "org", "")
   }
 }
 
@@ -13,14 +17,14 @@ resource "null_resource" "iso" {
   for_each = var.device_list
 
   triggers = {
-    cloudinit = fileexists("${var.cloudinit_path}/user-data") ? filemd5("${var.cloudinit_path}/user-data") : ""
+    cloudinit = fileexists("${var.cloudinit_path}/ciscosdwan_cloud_init.cfg") ? filemd5("${var.cloudinit_path}/ciscosdwan_cloud_init.cfg") : ""
     address   = md5(each.value.ipv4_address)
     data_dir  = "${path.cwd}/ISO/${each.key}"
     iso_file  = "${path.cwd}/ISO/${each.key}.iso"
   }
 
   provisioner "local-exec" {
-    command = "mkisofs -output ${self.triggers.iso_file} -volid cidata -joliet -rock ${self.triggers.data_dir}/user-data ${self.triggers.data_dir}/meta-data"
+    command = "mkisofs -output ${self.triggers.iso_file} -volid cidata -joliet -rock ${self.triggers.data_dir}/ciscosdwan_cloud_init.cfg"
   }
 
   # Requires terraform 0.12.23+ for issue #24139 fix (for_each destroy provisioner in module)
@@ -36,7 +40,7 @@ resource "null_resource" "iso" {
 }
 
 resource "vsphere_file" "iso" {
-  for_each         = var.device_list
+  for_each = var.device_list
 
   datacenter       = var.datacenter
   datastore        = var.iso_datastore
