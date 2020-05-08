@@ -19,7 +19,6 @@ resource "null_resource" "iso" {
 
   triggers = {
     cloudinit = fileexists("${var.cloudinit_path}/ciscosdwan_cloud_init.cfg") ? filemd5("${var.cloudinit_path}/ciscosdwan_cloud_init.cfg") : ""
-    address   = md5(each.value.ipv4_address)
     data_dir  = "${path.cwd}/ISO/${each.key}"
     iso_file  = "${path.cwd}/ISO/${each.key}.iso"
   }
