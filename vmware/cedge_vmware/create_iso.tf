@@ -6,6 +6,7 @@ resource "template_dir" "cloudinit" {
   vars = {
     ipv4_address = lookup(each.value, "ipv4_address", "dhcp")
     ipv4_gateway = lookup(each.value, "ipv4_gateway", "")
+    day0         = lookup(each.value, "day0", "")
     otp          = lookup(each.value, "otp", "")
     vbond        = lookup(each.value, "vbond", "")
     uuid         = lookup(each.value, "uuid", "")

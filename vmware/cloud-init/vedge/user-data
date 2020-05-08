@@ -1,3 +1,4 @@
+%{ if day0 != "" }${day0}%{ else }
 Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
 
@@ -36,3 +37,4 @@ vpn 512
  !
 !
 --==BOUNDARY==
+%{ endif }

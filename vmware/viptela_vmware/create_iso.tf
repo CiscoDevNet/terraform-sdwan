@@ -6,6 +6,7 @@ resource "template_dir" "cloudinit" {
   vars = {
     ipv4_address = lookup(each.value, "ipv4_address", "dhcp")
     ipv4_gateway = lookup(each.value, "ipv4_gateway", "")
+    day0         = lookup(each.value, "day0", "")
   }
 }
 
@@ -14,7 +15,6 @@ resource "null_resource" "iso" {
 
   triggers = {
     cloudinit = fileexists("${var.cloudinit_path}/user-data") ? filemd5("${var.cloudinit_path}/user-data") : ""
-    address   = md5(each.value.ipv4_address)
     data_dir  = "${path.cwd}/ISO/${each.key}"
     iso_file  = "${path.cwd}/ISO/${each.key}.iso"
   }
