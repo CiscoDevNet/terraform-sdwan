@@ -10,6 +10,12 @@ variable "datastore" {
 variable "folder" {
   type = string
 }
+variable "iso_datastore" {
+  type = string
+}
+variable "iso_path" {
+  type = string
+}
 variable "resource_pool" {
   type = string
 }
@@ -30,4 +36,7 @@ variable "vm_thin_provisioned" {
 }
 variable "device_list" {
   type = any
+}
+variable "cloudinit_path" {
+  type = string
 }

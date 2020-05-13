@@ -33,6 +33,11 @@ data "vsphere_datastore" "datastore" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
+data "vsphere_datastore" "iso_datastore" {
+  name          = var.iso_datastore
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
 data "vsphere_network" "network" {
   for_each = {
     for network in local.networks : "${network.device_key}.${network.network_key}" => network
@@ -62,11 +67,12 @@ resource "vsphere_virtual_machine" "vm" {
   guest_id          = data.vsphere_virtual_machine.template[0].guest_id
   scsi_type         = data.vsphere_virtual_machine.template[0].scsi_type
 
-  ignored_guest_ips = ["192.168.1.1"]
+  ignored_guest_ips = ["192.168.1.1", "0.0.0.0"]
   wait_for_guest_net_routable = false
 
   cdrom {
-    client_device = true
+    datastore_id = data.vsphere_datastore.iso_datastore.id
+    path         = "${var.iso_path}/${var.folder}/${each.key}.iso"
   }
 
   disk {
@@ -101,27 +107,9 @@ resource "vsphere_virtual_machine" "vm" {
     template_uuid = data.vsphere_virtual_machine.template[0].id
   }
 
-  vapp {
-    properties = {
-      # "config-version" = "1.0"
-      # "domain-name" = ""
-      "enable-scp-server" = "True"
-      "enable-ssh-server" = "True"
-      "hostname" = each.key
-      # "license" = "ax"
-      "login-username" = "admin"
-      # "login-password" = "admin"
-      # "mgmt-interface" = "GigabitEthernet1"
-      "mgmt-ipv4-addr" = lookup(each.value, "ipv4_address", "dhcp")
-      "mgmt-ipv4-gateway" = lookup(each.value, "ipv4_gateway", "dhcp")
-      # "mgmt-ipv4-network" =""
-      "mgmt-vlan" = "1"
-      # "pnsc-agent-local-port" = ""
-      # "pnsc-ipv4-addr" = ""
-      # "pnsc-shared-secret-key" = ""
-      # "privilege-password" = ""
-      # "remote-mgmt-ipv4-addr" = ""
-      # "resource-template" = "default"
-    }
-  }
+  depends_on = [
+    vsphere_file.iso,
+    null_resource.iso,
+    template_dir.cloudinit
+  ]
 }

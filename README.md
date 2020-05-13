@@ -24,19 +24,22 @@ In the vCenter UI, create the Viptela VM templates:
 1. In the "Select storage" section, set the virtual disk format to "Thin provisioned" to make more efficient use of the datastore disk space.
 
 After all of the OVFs have been deployed, edit the settings of each Viptela VM template and:
-1. Add a "SCSI Controller" of type "LSI Logic Parallel"
-1. Change "Hard disk 1" "Virtual Device Node" setting from "IDE 0" to "New SCSI controller"
-1. Click OK
+1. Add a "SCSI Controller" of type "LSI Logic Parallel".
+1. Change "Hard disk 1" "Virtual Device Node" setting from "IDE 0" to "New SCSI controller".
+1. Click OK.
+1. The VM is now ready to use as a template for use with terraform.
 
 > Note: Do not add a second disk to the vManage template.  Terraform will do this dynamically.
 
-#### cEdge
+#### CSR1000v
 In the vCenter UI, create the VM template for CSR1000v w/SD-WAN (aka cEdge):
-1. Deploy the OVF (`csr1000v-ucmk9.16.12.1e.ova` or similar)
+1. Deploy the OVF. (`csr1000v-ucmk9.16.12.1e.ova` or similar)
 1. In the "Select storage" section, set the virtual disk format to "Thin provisioned" to make more efficient use of the datastore disk space.
 1. In the "Customize template" section, just leave the values blank and click "Next".  Terraform will set these properties when it clones the VM.
-1. After the OVF is successfully deployed, power on the VM and watch the console until it finishes booting.  This will take several minutes.
-1. Once you see the login prompt, power down the VM.
+1. After the OVF is successfully deployed, go to the "Configure" section and select "vApp Options" from the menu on the left.  Click "Edit..." and unselect the "Enable vApp options" checkbox at the top.  Say "Yes" to the dialog box, then click "OK".
+1. Power on the VM and watch the console.
+1. Power off the VM immediately after the first reboot.  (If you miss this and power it off after it is fully up, delete the VM and repeat this process.)
+1. The VM is now ready to use as a template for use with terraform.
 
 ### Using terraform to deploy SD-WAN components
 Change to the vmware directory.
@@ -116,7 +119,7 @@ cedge_device_list = {
 
 > Note: the `*_template`, `datacenter`, `cluster`, `datastore` and `iso_datastore` values should be set to the names of the respective objects in vCenter.
 
-> Note: `ipv4_address` is applied to VPN 0 must be set to either "dhcp" or a static IP address in address/prefix-length notation (i.e. 192.168.0.2/24).  When specifying a static IP address, `ipv4_gateway` is also required.
+> Note: `ipv4_address` is applied to VPN 0 must be set to either "dhcp" or a static IP address.  Use address/prefix-length notation (i.e. 192.168.0.2/24) for Viptela components and address/netmask notation (i.e. 192.168.0.2 255.255.255.0) for CSR1000v.  When specifying a static IP address, `ipv4_gateway` is also required.
 
 > Note: `folder` is the VM folder to place all VMs.  It is optional.  If it is not specified then all VMs will be placed at the root of the datacenter.
 
