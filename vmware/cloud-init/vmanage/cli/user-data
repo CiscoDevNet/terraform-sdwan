@@ -3,6 +3,9 @@ MIME-Version: 1.0
 
 --==BOUNDARY==
 Content-Type: text/cloud-config; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="cloud-config.txt"
 
 #cloud-config
 vinitparam:
@@ -10,10 +13,14 @@ vinitparam:
 
 --==BOUNDARY==
 Content-Type: text/cloud-boothook; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="init-config.txt"
 
 #cloud-boothook
 !
 system 
+ host-name ${hostname}
  aaa
   user admin
    password admin

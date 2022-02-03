@@ -1,0 +1,57 @@
+#cloud-config
+write_files:
+- path: /etc/default/personality
+  content: "vsmart\n"
+- path: /etc/default/inited
+  content: "1\n"
+- path: /etc/confd/init/zcloud.xml
+  content: |
+    <config xmlns="http://tail-f.com/ns/config/1.0">
+      <system xmlns="http://viptela.com/system">
+        <host-name>${hostname}</host-name>
+        <aaa>
+          <user>
+            <name>admin</name>
+            <password>$6$9a83b7d92bd9139d$og/JuVmaBnL9.JCfrXtTtosYuVuJ8Oq0i1k1NXxBbO7TBUG6/Y8Z/8vtyklCxanKGmyV0/16cT1vurddHR.2i1</password>
+          </user>
+        </aaa>
+      </system>
+      <vpn xmlns="http://viptela.com/vpn">
+        <vpn-instance>
+          <vpn-id>0</vpn-id>
+%{ if ipv4_gateway != "" }
+          <ip>
+            <route>
+              <prefix>0.0.0.0/0</prefix>
+              <next-hop>
+                <address>${ipv4_gateway}</address>
+              </next-hop>
+            </route>
+          </ip>
+%{ endif }
+          <interface>
+            <if-name>eth0</if-name>
+%{ if ipv4_address == "dhcp" }
+            <ip>
+              <dhcp-client>true</dhcp-client>
+            </ip>
+%{ else }
+            <ip>
+              <address>${ipv4_address}</address>
+            </ip>
+%{ endif }
+            <shutdown>false</shutdown>
+          </interface>
+        </vpn-instance>
+        <vpn-instance>
+          <vpn-id>512</vpn-id>
+          <interface>
+            <if-name>eth1</if-name>
+            <ip>
+              <dhcp-client>true</dhcp-client>
+            </ip>
+            <shutdown>true</shutdown>
+          </interface>
+        </vpn-instance>
+      </vpn>
+    </config>

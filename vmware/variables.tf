@@ -69,3 +69,12 @@ variable "cedge_device_list" {
   type = any
   default = {}
 }
+
+variable "cloudinit_type" {
+  type = string
+  default = "cli"
+  validation {
+    condition = var.cloudinit_type == "cli" || var.cloudinit_type == "xml"
+    error_message = "The cloudinit_type must be either \"cli\" or \"xml\"."
+  }
+}
