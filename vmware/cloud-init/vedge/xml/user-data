@@ -40,6 +40,14 @@ write_files:
               <address>${ipv4_address}</address>
             </ip>
 %{ endif }
+            <tunnel-interface>
+              <encapsulation>
+                <encap>ipsec</encap>
+              </encapsulation>
+              <allow-service>
+                <all>true</all>
+              </allow-service>
+            </tunnel-interface>
             <shutdown>false</shutdown>
           </interface>
         </vpn-instance>

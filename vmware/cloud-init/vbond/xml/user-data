@@ -45,9 +45,7 @@ write_files:
                 <encap>ipsec</encap>
               </encapsulation>
               <allow-service>
-                <icmp>true</icmp>
-                <sshd>true</sshd>
-                <netconf>true</netconf>
+                <all>true</all>
               </allow-service>
             </tunnel-interface>
             <shutdown>false</shutdown>
