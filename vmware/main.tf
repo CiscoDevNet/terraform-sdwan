@@ -38,7 +38,7 @@ module "provision_vmanage_vmware" {
   vm_memory = 32768
   vm_add_disks = [100]
   vm_thin_provisioned = true
-  cloudinit_path = "${path.root}/cloud-init/vmanage/"
+  cloudinit_path = "${path.root}/cloud-init/vmanage/${var.cloudinit_type}/"
 }
 
 module "provision_vsmart_vmware" {
@@ -56,7 +56,7 @@ module "provision_vsmart_vmware" {
   vm_memory = 4096
   vm_add_disks = []
   vm_thin_provisioned = true
-  cloudinit_path = "${path.root}/cloud-init/vsmart/"
+  cloudinit_path = "${path.root}/cloud-init/vsmart/${var.cloudinit_type}/"
 }
 
 module "provision_vbond_vmware" {
@@ -74,7 +74,7 @@ module "provision_vbond_vmware" {
   vm_memory = 4096
   vm_add_disks = []
   vm_thin_provisioned = true
-  cloudinit_path = "${path.root}/cloud-init/vbond/"
+  cloudinit_path = "${path.root}/cloud-init/vbond/${var.cloudinit_type}/"
 }
 
 module "provision_vedge_vmware" {
@@ -92,7 +92,7 @@ module "provision_vedge_vmware" {
   vm_memory = 4096
   vm_add_disks = []
   vm_thin_provisioned = true
-  cloudinit_path = "${path.root}/cloud-init/vedge/"
+  cloudinit_path = "${path.root}/cloud-init/vedge/${var.cloudinit_type}/"
 }
 
 module "provision_cedge_vmware" {

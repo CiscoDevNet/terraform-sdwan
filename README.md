@@ -23,13 +23,15 @@ In the vCenter UI, create the Viptela VM templates:
 1. Deploy the Viptela OVF for vManage, vEdge and vSmart.
 1. In the "Select storage" section, set the virtual disk format to "Thin provisioned" to make more efficient use of the datastore disk space.
 
-After all of the OVFs have been deployed, edit the settings of each Viptela VM template and:
+On v19 and earlier, after all of the OVFs have been deployed, edit the settings of each Viptela VM template and:
 1. Add a "SCSI Controller" of type "LSI Logic Parallel".
 1. Change "Hard disk 1" "Virtual Device Node" setting from "IDE 0" to "New SCSI controller".
 1. Click OK.
 1. The VM is now ready to use as a template for use with terraform.
 
 > Note: Do not add a second disk to the vManage template.  Terraform will do this dynamically.
+
+> Note: You do not need to do these steps for 20.x and later. These OVFs alreday use a SCSI controller.
 
 #### CSR1000v
 In the vCenter UI, create the VM template for CSR1000v w/SD-WAN (aka cEdge):
@@ -60,11 +62,12 @@ datastore         = "datastore1"
 folder            = "folder1"
 iso_datastore     = "datastore1"
 iso_path          = "cloud-init"
-vmanage_template  = "viptela-vmanage-18.4.3-genericx86-64"
-vbond_template    = "viptela-edge-18.4.3-genericx86-64"
-vsmart_template   = "viptela-smart-18.4.3-genericx86-64"
-vedge_template    = "viptela-edge-18.4.3-genericx86-64"
+vmanage_template  = "viptela-manage-20.7.1"
+vbond_template    = "viptela-edge-20.7.1"
+vsmart_template   = "viptela-smart-20.7.1"
+vedge_template    = "viptela-edge-20.7.1"
 cedge_template    = "csr1000v-ucmk9.16.12.1e"
+cloudinit_type    = "xml"
 
 vmanage_device_list = {
   "vmanage1" = {
@@ -122,6 +125,8 @@ cedge_device_list = {
 > Note: `ipv4_address` is applied to VPN 0 must be set to either "dhcp" or a static IP address.  Use address/prefix-length notation (i.e. 192.168.0.2/24) for Viptela components and address/netmask notation (i.e. 192.168.0.2 255.255.255.0) for CSR1000v.  When specifying a static IP address, `ipv4_gateway` is also required.
 
 > Note: `folder` is the VM folder to place all VMs.  It is optional.  If it is not specified then all VMs will be placed at the root of the datacenter.
+
+> Note: `cloudinit_type` should be set to "xml" for 20.5 and later and "cli" for 20.4 and earlier.
 
 You can set the server and login credentials for vCenter in your environment if you do not want to put these in the `terraform.tfvars` file.  Example:
 
