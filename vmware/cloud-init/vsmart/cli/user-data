@@ -9,7 +9,7 @@ Content-Type: text/cloud-boothook; charset="us-ascii"
 system 
  aaa
   user admin
-   password admin
+   password cisco
 !
 vpn 0
  %{ if ipv4_gateway != ""}

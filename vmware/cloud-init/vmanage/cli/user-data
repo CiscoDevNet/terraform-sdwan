@@ -23,7 +23,7 @@ system
  host-name ${hostname}
  aaa
   user admin
-   password admin
+   password cisco
 !
 vpn 0
  %{ if ipv4_gateway != ""}
