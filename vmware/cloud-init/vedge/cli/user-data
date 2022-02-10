@@ -10,7 +10,7 @@ Content-Type: text/cloud-boothook; charset="us-ascii"
 viptela-system:system 
  aaa
   user admin
-   password admin
+   password cisco
 !
 vpn 0
  %{ if ipv4_gateway != ""}

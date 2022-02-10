@@ -13,6 +13,10 @@ This repo contains terraform code for deploying the Cisco SD-WAN (Viptela) contr
     brew install cdrtools
     ```
 
+## Caveats
+
+- There is a issue with cloud-init for vEdge 20.6.2 where it does not configure the tunnel-interface for vpn0. This means you cannot allow services like netconf via clout-init but must do it after provisioning. vEdge 20.7.1 works correctly.
+
 ## VMware
 
 ### Creating the SD-WAN VM templates
@@ -67,7 +71,7 @@ vbond_template    = "viptela-edge-20.7.1"
 vsmart_template   = "viptela-smart-20.7.1"
 vedge_template    = "viptela-edge-20.7.1"
 cedge_template    = "csr1000v-ucmk9.16.12.1e"
-cloudinit_type    = "xml"
+cloudinit_type    = "v2"
 
 vmanage_device_list = {
   "vmanage1" = {
@@ -126,7 +130,9 @@ cedge_device_list = {
 
 > Note: `folder` is the VM folder to place all VMs.  It is optional.  If it is not specified then all VMs will be placed at the root of the datacenter.
 
-> Note: `cloudinit_type` should be set to "xml" for 20.5 and later and "cli" for 20.4 and earlier.
+> Note: `cloudinit_type` should be set to "v2" for 20.5 and later and "v1" for 20.4 and earlier.
+
+> Note: The default password set on provisioned devices is "cisco".
 
 You can set the server and login credentials for vCenter in your environment if you do not want to put these in the `terraform.tfvars` file.  Example:
 

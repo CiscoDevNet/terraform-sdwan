@@ -12,7 +12,7 @@ write_files:
         <aaa>
           <user>
             <name>admin</name>
-            <password>$6$9a83b7d92bd9139d$og/JuVmaBnL9.JCfrXtTtosYuVuJ8Oq0i1k1NXxBbO7TBUG6/Y8Z/8vtyklCxanKGmyV0/16cT1vurddHR.2i1</password>
+            <password>$6$329577c85ea66998$tTtlYqQIpfCGvqNZ2nICRWOSfyIV0/RO0ZWtFwpSJ0bBvlQoCowl6fO9SjzerDwmKYutIbPMAub7B4K/JG4c/0</password>
           </user>
         </aaa>
       </system>
@@ -40,6 +40,11 @@ write_files:
               <address>${ipv4_address}</address>
             </ip>
 %{ endif }
+            <tunnel-interface>
+              <allow-service>
+                <all>true</all>
+              </allow-service>
+            </tunnel-interface>
             <shutdown>false</shutdown>
           </interface>
         </vpn-instance>
