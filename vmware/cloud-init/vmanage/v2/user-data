@@ -1,3 +1,4 @@
+%{ if day0 != "" }${day0}%{ else }
 #cloud-config
 fs_setup:
 - device: "/dev/sdb"
@@ -70,3 +71,4 @@ write_files:
         </vpn-instance>
       </vpn>
     </config>
+%{ endif }
