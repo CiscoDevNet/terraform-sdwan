@@ -31,7 +31,7 @@ write_files:
           </ip>
 %{ endif }
           <interface>
-            <if-name>eth0</if-name>
+            <if-name>eth1</if-name>
 %{ if ipv4_address == "dhcp" }
             <ip>
               <dhcp-client>true</dhcp-client>
@@ -52,7 +52,7 @@ write_files:
         <vpn-instance>
           <vpn-id>512</vpn-id>
           <interface>
-            <if-name>eth1</if-name>
+            <if-name>eth0</if-name>
             <ip>
               <dhcp-client>true</dhcp-client>
             </ip>

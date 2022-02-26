@@ -1,5 +1,4 @@
-%{ if day0 != "" }${day0}%{ else }
-Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+%{ if day0 != "" }${day0}%{ else }Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
 
 --==BOUNDARY==
@@ -31,7 +30,7 @@ vpn 0
  ip route 0.0.0.0/0 ${ipv4_gateway}
 %{ endif }
 
- interface eth0
+ interface eth1
 %{ if ipv4_address == "dhcp" }
   ip dhcp-client
 %{ else }
@@ -45,7 +44,7 @@ vpn 0
  !
 !
 vpn 512
- interface eth1
+ interface eth0
   ip dhcp-client
   shutdown
  !
