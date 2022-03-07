@@ -9,6 +9,7 @@ write_files:
   content: |
     <config xmlns="http://tail-f.com/ns/config/1.0">
       <system xmlns="http://viptela.com/system">
+        <personality>vsmart</personality>
         <host-name>${hostname}</host-name>
         <aaa>
           <user>
