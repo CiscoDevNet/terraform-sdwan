@@ -1,3 +1,4 @@
+%{ if day0 != "" }${day0}%{ else }
 #cloud-config
 write_files:
 - path: /etc/default/personality
@@ -8,6 +9,7 @@ write_files:
   content: |
     <config xmlns="http://tail-f.com/ns/config/1.0">
       <system xmlns="http://viptela.com/system">
+        <personality>vedge</personality>
         <host-name>${hostname}</host-name>
         <aaa>
           <user>
@@ -63,3 +65,4 @@ write_files:
         </vpn-instance>
       </vpn>
     </config>
+%{ endif }

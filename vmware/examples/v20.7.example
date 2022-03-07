@@ -1,0 +1,53 @@
+# vsphere_user      = ""
+# vsphere_password  = ""
+# vsphere_server    = ""
+datacenter        = "my-datacenter"
+cluster           = "my-cluster"
+datastore         = "my-datastore"
+folder            = "my-folder"
+iso_datastore     = "my-datastore"
+iso_path          = "cloud-init"
+cloudinit_type    = "v2"
+vmanage_template  = "viptela-manage-20.7.1"
+vbond_template    = "viptela-edge-20.7.1"
+vsmart_template   = "viptela-smart-20.7.1"
+vedge_template    = "viptela-edge-20.7.1"
+cedge_template    = "csr1000v-16.12.02r"
+
+vmanage_device_list = {
+  "vmanage1" = {
+    networks = ["my-vmnetwork","my-vmnetwork","my-vmnetwork"]
+    ipv4_address = "192.168.1.51/22"
+    ipv4_gateway = "192.168.1.1"
+  }
+}
+
+vsmart_device_list = {
+  "vsmart1" = {
+    networks = ["my-vmnetwork","my-vmnetwork"]
+    ipv4_address = "192.168.1.52/22"
+    ipv4_gateway = "192.168.1.1"
+  }
+}
+
+vbond_device_list = {
+  "vbond1" = {
+    networks = ["my-vmnetwork","my-vmnetwork"]
+    ipv4_address = "192.168.1.53/22"
+    ipv4_gateway = "192.168.1.1"
+  }
+}
+
+vedge_device_list = {
+  "vedge1" = {
+    networks = ["my-vmnetwork","my-vmnetwork","my-vmnetwork", "my-vmnetwork"]
+    ipv4_address = "dhcp"
+  }
+}
+
+cedge_device_list = {
+  "cedge1" = {
+    networks = ["my-vmnetwork"]
+    ipv4_address = "dhcp"
+  }
+}

@@ -11,6 +11,7 @@ resource "template_dir" "cloudinit" {
     vbond        = lookup(each.value, "vbond", "")
     uuid         = lookup(each.value, "uuid", "")
     org          = lookup(each.value, "org", "")
+    hostname     = "${each.key}"
   }
 }
 

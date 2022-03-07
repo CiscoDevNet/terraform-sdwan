@@ -1,0 +1,370 @@
+# vsphere_user      = ""
+# vsphere_password  = ""
+# vsphere_server    = ""
+datacenter        = "my-datacenter"
+cluster           = "my-cluster"
+datastore         = "my-datastore"
+folder            = "my-sdwan"
+iso_datastore     = "my-datastore"
+iso_path          = "cloud-init"
+vmanage_template  = "viptela-manage-20.7.1"
+vbond_template    = "viptela-edge-20.7.1"
+vsmart_template   = "viptela-smart-20.7.1"
+vedge_template    = "viptela-edge-20.7.1"
+cedge_template    = "csr1000v-16.12.02r"
+
+vmanage_device_list = {
+  "vmanage1" = {
+    networks = ["my-vmnetwork","my-vmnetwork","my-vmnetwork"]
+    day0 = <<EOF
+#cloud-config
+fs_setup:
+- device: "/dev/sdb"
+  partition: "none"
+  filesystem: "ext4"
+mounts:
+- [ sdb, /opt/data ]
+write_files:
+- path: /opt/web-app/etc/persona
+  owner: vmanage:vmanage-admin
+  permissions: '0644'
+  content: '{"persona":"COMPUTE_AND_DATA"}'
+- path: /etc/default/personality
+  content: "vmanage\n"
+- path: /etc/default/inited
+  content: "1\n"
+- path: /etc/confd/init/zcloud.xml
+  content: |
+    <config xmlns="http://tail-f.com/ns/config/1.0">
+      <system xmlns="http://viptela.com/system">
+        <personality>vmanage</personality>
+        <host-name>vmanage1</host-name>
+        <aaa>
+          <user>
+            <name>admin</name>
+            <password>$6$329577c85ea66998$tTtlYqQIpfCGvqNZ2nICRWOSfyIV0/RO0ZWtFwpSJ0bBvlQoCowl6fO9SjzerDwmKYutIbPMAub7B4K/JG4c/0</password>
+          </user>
+        </aaa>
+      </system>
+      <vpn xmlns="http://viptela.com/vpn">
+        <vpn-instance>
+          <vpn-id>0</vpn-id>
+          <ip>
+            <route>
+              <prefix>0.0.0.0/0</prefix>
+              <next-hop>
+                <address>192.168.1.1</address>
+              </next-hop>
+            </route>
+          </ip>
+          <interface>
+            <if-name>eth0</if-name>
+            <ip>
+              <address>192.168.1.51/22</address>
+            </ip>
+            <tunnel-interface>
+              <allow-service>
+                <all>true</all>
+              </allow-service>
+            </tunnel-interface>
+            <shutdown>false</shutdown>
+          </interface>
+        </vpn-instance>
+        <vpn-instance>
+          <vpn-id>512</vpn-id>
+          <interface>
+            <if-name>eth1</if-name>
+            <ip>
+              <dhcp-client>true</dhcp-client>
+            </ip>
+            <shutdown>true</shutdown>
+          </interface>
+        </vpn-instance>
+      </vpn>
+    </config>
+EOF
+  }
+}
+
+vsmart_device_list = {
+  "vsmart1" = {
+    networks = ["my-vmnetwork","my-vmnetwork"]
+    day0 = <<EOF
+#cloud-config
+write_files:
+- path: /etc/default/personality
+  content: "vsmart\n"
+- path: /etc/default/inited
+  content: "1\n"
+- path: /etc/confd/init/zcloud.xml
+  content: |
+    <config xmlns="http://tail-f.com/ns/config/1.0">
+      <system xmlns="http://viptela.com/system">
+        <personality>vsmart</personality>
+        <host-name>vsmart1</host-name>
+        <aaa>
+          <user>
+            <name>admin</name>
+            <password>$6$329577c85ea66998$tTtlYqQIpfCGvqNZ2nICRWOSfyIV0/RO0ZWtFwpSJ0bBvlQoCowl6fO9SjzerDwmKYutIbPMAub7B4K/JG4c/0</password>
+          </user>
+        </aaa>
+      </system>
+      <vpn xmlns="http://viptela.com/vpn">
+        <vpn-instance>
+          <vpn-id>0</vpn-id>
+          <ip>
+            <route>
+              <prefix>0.0.0.0/0</prefix>
+              <next-hop>
+                <address>192.168.1.1</address>
+              </next-hop>
+            </route>
+          </ip>
+          <interface>
+            <if-name>eth0</if-name>
+            <ip>
+              <address>192.168.1.52/22</address>
+            </ip>
+            <tunnel-interface>
+              <allow-service>
+                <all>true</all>
+              </allow-service>
+            </tunnel-interface>
+            <shutdown>false</shutdown>
+          </interface>
+        </vpn-instance>
+        <vpn-instance>
+          <vpn-id>512</vpn-id>
+          <interface>
+            <if-name>eth1</if-name>
+            <ip>
+              <dhcp-client>true</dhcp-client>
+            </ip>
+            <shutdown>true</shutdown>
+          </interface>
+        </vpn-instance>
+      </vpn>
+    </config>
+EOF
+  }
+}
+
+vbond_device_list = {
+  "vbond1" = {
+    networks = ["my-vmnetwork","my-vmnetwork"]
+    day0 = <<EOF
+#cloud-config
+write_files:
+- path: /etc/default/personality
+  content: "vedge\n"
+- path: /etc/default/inited
+  content: "1\n"
+- path: /etc/confd/init/zcloud.xml
+  content: |
+    <config xmlns="http://tail-f.com/ns/config/1.0">
+      <system xmlns="http://viptela.com/system">
+        <personality>vedge</personality>
+        <host-name>vbond1</host-name>
+        <aaa>
+          <user>
+            <name>admin</name>
+            <password>$6$329577c85ea66998$tTtlYqQIpfCGvqNZ2nICRWOSfyIV0/RO0ZWtFwpSJ0bBvlQoCowl6fO9SjzerDwmKYutIbPMAub7B4K/JG4c/0</password>
+          </user>
+        </aaa>
+      </system>
+      <vpn xmlns="http://viptela.com/vpn">
+        <vpn-instance>
+          <vpn-id>0</vpn-id>
+          <ip>
+            <route>
+              <prefix>0.0.0.0/0</prefix>
+              <next-hop>
+                <address>192.168.1.1</address>
+              </next-hop>
+            </route>
+          </ip>
+          <interface>
+            <if-name>ge0/0</if-name>
+            <ip>
+              <address>192.168.1.53/22</address>
+            </ip>
+            <tunnel-interface>
+              <encapsulation>
+                <encap>ipsec</encap>
+              </encapsulation>
+              <allow-service>
+                <all>true</all>
+              </allow-service>
+            </tunnel-interface>
+            <shutdown>false</shutdown>
+          </interface>
+        </vpn-instance>
+        <vpn-instance>
+          <vpn-id>512</vpn-id>
+          <interface>
+            <if-name>eth0</if-name>
+            <ip>
+              <dhcp-client>true</dhcp-client>
+            </ip>
+            <shutdown>true</shutdown>
+          </interface>
+        </vpn-instance>
+      </vpn>
+    </config>
+EOF
+  }
+}
+
+vedge_device_list = {
+  "vedge1" = {
+    networks = ["my-vmnetwork","my-vmnetwork","my-vmnetwork", "my-vmnetwork"]
+    day0 = <<EOF
+#cloud-config
+write_files:
+- path: /etc/default/personality
+  content: "vedge\n"
+- path: /etc/default/inited
+  content: "1\n"
+- path: /etc/confd/init/zcloud.xml
+  content: |
+    <config xmlns="http://tail-f.com/ns/config/1.0">
+      <personality>vedge</personality>
+      <system xmlns="http://viptela.com/system">
+        <host-name>vedge1</host-name>
+        <aaa>
+          <user>
+            <name>admin</name>
+            <password>$6$329577c85ea66998$tTtlYqQIpfCGvqNZ2nICRWOSfyIV0/RO0ZWtFwpSJ0bBvlQoCowl6fO9SjzerDwmKYutIbPMAub7B4K/JG4c/0</password>
+          </user>
+        </aaa>
+      </system>
+      <vpn xmlns="http://viptela.com/vpn">
+        <vpn-instance>
+          <vpn-id>0</vpn-id>
+          <interface>
+            <if-name>ge0/0</if-name>
+            <ip>
+              <dhcp-client>true</dhcp-client>
+            </ip>
+            <tunnel-interface>
+              <encapsulation>
+                <encap>ipsec</encap>
+              </encapsulation>
+              <allow-service>
+                <all>true</all>
+              </allow-service>
+            </tunnel-interface>
+            <shutdown>false</shutdown>
+          </interface>
+        </vpn-instance>
+        <vpn-instance>
+          <vpn-id>512</vpn-id>
+          <interface>
+            <if-name>eth0</if-name>
+            <ip>
+              <dhcp-client>true</dhcp-client>
+            </ip>
+            <shutdown>true</shutdown>
+          </interface>
+        </vpn-instance>
+      </vpn>
+    </config>
+EOF
+  }
+}
+
+cedge_device_list = {
+  "cedge1" = {
+    networks = ["my-vmnetwork", "my-vmnetwork"]
+    day0 = <<EOF
+Content-Type: multipart/mixed; boundary="===============3067523750048488884=="
+MIME-Version: 1.0
+
+--===============3067523750048488884==
+Content-Type: text/cloud-config; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="cloud-config"
+
+#cloud-config
+vinitparam:
+ - rcc : true
+
+--===============3067523750048488884==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="config-CSR-82DEC3C6-3A28-B866-6F4A-40BEA274CA00.txt"
+
+#cloud-boothook
+viptela-system:system
+ personality           vedge
+ device-model          vedge-CSR-1000v
+ host-name             cedge1
+ logging
+  disk
+   enable
+  !
+ !
+!
+hostname cedge1
+username admin privilege 15 secret 0 cisco
+!
+logging persistent immediate filesize 8192 size 1000000
+aaa authentication login default local
+aaa authorization exec default local none
+interface GigabitEthernet1
+ no shutdown
+ arp timeout 1200
+ ip address dhcp client-id GigabitEthernet1
+ ip redirects
+ ip dhcp client default-router distance 1
+ ip mtu    1500
+ mtu 1500
+ negotiation auto
+exit
+interface Tunnel1
+ no shutdown
+ ip unnumbered GigabitEthernet1
+ no ip redirects
+ ipv6 unnumbered GigabitEthernet1
+ no ipv6 redirects
+ tunnel source GigabitEthernet1
+ tunnel mode sdwan
+exit
+ sdwan
+  interface GigabitEthernet1
+   tunnel-interface
+    encapsulation ipsec weight 1
+    no border
+    color public-internet
+    no last-resort-circuit
+    no low-bandwidth-link
+    control-connections
+    no vbond-as-stun-server
+    vmanage-connection-preference 5
+    port-hop
+    carrier                       default
+    nat-refresh-interval          5
+    hello-interval                1000
+    hello-tolerance               12
+    no allow-service all
+    no allow-service bgp
+    allow-service dhcp
+    allow-service dns
+    allow-service icmp
+    allow-service sshd
+    allow-service netconf
+    no allow-service ntp
+    no allow-service ospf
+    no allow-service stun
+    no allow-service snmp
+   exit
+  exit
+  !
+ !
+!
+--===============3067523750048488884==
+EOF
+  }
+}

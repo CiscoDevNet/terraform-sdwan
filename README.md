@@ -4,18 +4,14 @@ This repo contains terraform code for deploying the Cisco SD-WAN (Viptela) contr
 
 ## Requirements
 
-- [Terraform](https://www.terraform.io).  Install with Homebrew:
+- [Terraform](https://www.terraform.io).  On a Mac, install with Homebrew:
     ```
     brew install terraform
     ```
-- mkisofs is used to create the cloud-init ISOs.  Install with Homebrew:
+- mkisofs is used to create the cloud-init ISOs.  On a Mac, install with Homebrew:
     ```
     brew install cdrtools
     ```
-
-## Caveats
-
-- There is a issue with cloud-init for vEdge 20.6.2 where it does not configure the tunnel-interface for vpn0. This means you cannot allow services like netconf via clout-init but must do it after provisioning. vEdge 20.7.1 works correctly.
 
 ## VMware
 
@@ -48,91 +44,35 @@ In the vCenter UI, create the VM template for CSR1000v w/SD-WAN (aka cEdge):
 1. The VM is now ready to use as a template for use with terraform.
 
 ### Using terraform to deploy SD-WAN components
+There two main was to deploy on VMware.  The first is to let the module build out the bootstrap configuration for you, while you simply supply IPv4 addressing info.  The second way is to supply the full bootstrap configuration yourself.  The second method gives you much greater control over the bootstrap configuration.  The links below have examples of each method.
+
+- [v20.4 and under](vmware/examples/v19.2.example)
+- [v20.4 and under with bootstrap](vmwware/examples/v19.2-day0.example)
+- [v20.5 and up](vmware/examples/v20.7.example)
+- [v20.5 and up with bootstrap](vmware/examples/v20.7-day0.example)
+
+To use the examples:
+
 Change to the vmware directory.
 
 ```
 cd vmware
 ```
 
-Create a `terraform.tfvars` file with the following variables set, or pass in these variables some other way (e.g. Ansible, environment variables, etc.)
+Copy the example you want to  a file named `terraform.tfvars`.
 
 ```
-vsphere_user      = johndoe@xyz.com
-vsphere_password  = abc123
-vsphere_server    = vc1.xyz.com
-datacenter        = "xyz-datacenter"
-cluster           = "xyz-cluster"
-datastore         = "datastore1"
-folder            = "folder1"
-iso_datastore     = "datastore1"
-iso_path          = "cloud-init"
-vmanage_template  = "viptela-manage-20.7.1"
-vbond_template    = "viptela-edge-20.7.1"
-vsmart_template   = "viptela-smart-20.7.1"
-vedge_template    = "viptela-edge-20.7.1"
-cedge_template    = "csr1000v-ucmk9.16.12.1e"
-cloudinit_type    = "v2"
-
-vmanage_device_list = {
-  "vmanage1" = {
-    networks = ["vmnetwork","vmnetwork"]
-    ipv4_address = "192.168.1.2/24"
-    ipv4_gateway = "192.168.1.1"
-  },
-  "vmanage2" = {
-    networks = ["vmnetwork","vmnetwork"]
-    ipv4_address = "dhcp"
-  }
-}
-
-vsmart_device_list = {
-  "vsmart1" = {
-    networks = ["vmnetwork","vmnetwork"]
-    ipv4_address = "dhcp"
-  },
-  "vsmart2" = {
-    networks = ["vmnetwork","vmnetwork"]
-    ipv4_address = "dhcp"
-  }
-}
-
-vbond_device_list = {
-  "vbond1" = {
-    networks = ["vmnetwork","vmnetwork"]
-    ipv4_address = "dhcp"
-  },
-  "vbond2" = {
-    networks = ["vmnetwork","vmnetwork"]
-    ipv4_address = "dhcp"
-  }
-}
-
-vedge_device_list = {
-  "vedge1" = {
-    networks = ["vmnetwork","vmnetwork","vmnetwork"]
-    ipv4_address = "dhcp"
-  }
-}
-
-cedge_device_list = {
-  "cedge1" = {
-    networks = ["vmnetwork"]
-    ipv4_address = "dhcp"
-  }
-}
+cp examples/v19.2.example terraform.tfvars
 ```
 
-> Note: the `networks` list is an ordered list of VM networks to use for each interface of the device.  For vManage/vSmart the order is eth0, eth1.  For vBond/vEdge the order is eth0, g0/0, g0/1, g0/2, g0/3.
+Change the variables and/or configuration to suit your environment, or pass in these variables some other way (e.g. Ansible, environment variables, etc.)  Keep in mind the following when updating the variables:
 
-> Note: the `*_template`, `datacenter`, `cluster`, `datastore` and `iso_datastore` values should be set to the names of the respective objects in vCenter.
-
-> Note: `ipv4_address` is applied to VPN 0 must be set to either "dhcp" or a static IP address.  Use address/prefix-length notation (i.e. 192.168.0.2/24) for Viptela components and address/netmask notation (i.e. 192.168.0.2 255.255.255.0) for CSR1000v.  When specifying a static IP address, `ipv4_gateway` is also required.
-
-> Note: `folder` is the VM folder to place all VMs.  It is optional.  If it is not specified then all VMs will be placed at the root of the datacenter.
-
-> Note: `cloudinit_type` should be set to "v2" for 20.5 and later and "v1" for 20.4 and earlier.
-
-> Note: The default password set on provisioned devices is "cisco".
+- `networks` is an ordered list of VM networks to use for each interface of the device.  For vManage/vSmart the order is eth0, eth1.  For vBond/vEdge the order is eth0, g0/0, g0/1, g0/2, g0/3.
+- `*_template`, `datacenter`, `cluster`, `datastore` and `iso_datastore` values should be set to the names of the respective objects in vCenter.
+- `ipv4_address` is applied to VPN 0 must be set to either "dhcp" or a static IP address.  Use address/prefix-length notation (i.e. 192.168.0.2/24) for Viptela components and address/netmask notation (i.e. 192.168.0.2 255.255.255.0) for CSR1000v.  When specifying a static IP address, `ipv4_gateway` is also required.
+- `folder` is the VM folder to place all VMs.  It is optional.  If it is not specified then all VMs will be placed at the root of the datacenter.
+- `cloudinit_type` should be set to "v2" for 20.5 and later and "v1" for 20.4 and earlier.
+- The default password set on provisioned devices is "cisco".
 
 You can set the server and login credentials for vCenter in your environment if you do not want to put these in the `terraform.tfvars` file.  Example:
 

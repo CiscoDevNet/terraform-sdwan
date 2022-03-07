@@ -1,5 +1,4 @@
-%{ if day0 != "" }${day0}%{ else }
-Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+%{ if day0 != "" }${day0}%{ else }Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
 
 --==BOUNDARY==
@@ -8,6 +7,7 @@ Content-Type: text/cloud-boothook; charset="us-ascii"
 #cloud-boothook
 !
 viptela-system:system 
+ host-name ${hostname}
  aaa
   user admin
    password cisco
