@@ -1,0 +1,278 @@
+# vsphere_user      = ""
+# vsphere_password  = ""
+# vsphere_server    = ""
+datacenter        = "my-datacenter"
+cluster           = "my-cluster"
+datastore         = "my-datastore"
+folder            = "my-sdwan"
+iso_datastore     = "my-datastore"
+iso_path          = "cloud-init"
+vmanage_template  = "viptela-manage-19.2.4"
+vbond_template    = "viptela-edge-19.2.4"
+vsmart_template   = "viptela-smart-19.2.4"
+vedge_template    = "viptela-edge-19.2.4"
+cedge_template    = "csr1000v-16.12.02r"
+
+vmanage_device_list = {
+  "vmanage1" = {
+    networks = ["my-vmnetwork","my-vmnetwork","my-vmnetwork"]
+    day0 = <<EOF
+Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+MIME-Version: 1.0
+
+--==BOUNDARY==
+Content-Type: text/cloud-config; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="cloud-config.txt"
+
+#cloud-config
+vinitparam:
+ - format-partition : 1
+
+--==BOUNDARY==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="init-config.txt"
+
+#cloud-boothook
+!
+system 
+ host-name vmanage1
+ aaa
+  user admin
+   password cisco
+!
+vpn 0
+ ip route 0.0.0.0/0 192.168.1.1
+ interface eth1
+  ip address 192.168.1.51/22
+  tunnel-interface
+   allow-service all
+  !
+  no shutdown
+ !
+!
+vpn 512
+ interface eth0
+  ip dhcp-client
+  shutdown
+ !
+!
+--==BOUNDARY==
+EOF
+  }
+}
+
+vsmart_device_list = {
+  "vsmart1" = {
+    networks = ["my-vmnetwork","my-vmnetwork"]
+    day0 = <<EOF
+Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+MIME-Version: 1.0
+
+--==BOUNDARY==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+
+#cloud-boothook
+!
+system
+ host-name vsmart1
+ aaa
+  user admin
+   password cisco
+!
+vpn 0
+ ip route 0.0.0.0/0 192.168.1.1
+ interface eth1
+  ip address 192.168.1.52/22
+  tunnel-interface
+   allow-service all
+  !
+  no shutdown
+ !
+!
+vpn 512
+ interface eth0
+  ip dhcp-client
+  shutdown
+ !
+!
+--==BOUNDARY==
+EOF
+  }
+}
+
+vbond_device_list = {
+  "vbond1" = {
+    networks = ["my-vmnetwork","my-vmnetwork"]
+    day0 = <<EOF
+Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+MIME-Version: 1.0
+
+--==BOUNDARY==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+
+#cloud-boothook
+!
+viptela-system:system 
+ host-name vbond1
+ aaa
+  user admin
+   password cisco
+!
+vpn 0
+ ip route 0.0.0.0/0 192.168.1.1 
+ interface ge0/0
+  ip address 192.168.1.53/22
+  tunnel-interface
+   allow-service all
+  !
+  no shutdown
+ !
+!
+vpn 512
+ interface eth0
+  ip dhcp-client
+  shutdown
+ !
+!
+--==BOUNDARY==
+EOF
+  }
+}
+
+vedge_device_list = {
+  "vedge1" = {
+    networks = ["my-vmnetwork","my-vmnetwork","my-vmnetwork", "my-vmnetwork"]
+    day0 = <<EOF
+Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+MIME-Version: 1.0
+
+--==BOUNDARY==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+
+#cloud-boothook
+!
+viptela-system:system 
+ host-name vedge1
+ aaa
+  user admin
+   password cisco
+!
+vpn 0
+ interface ge0/0
+  ip dhcp-client
+  tunnel-interface
+   allow-service all
+  !
+  no shutdown
+ !
+!
+vpn 512
+ interface eth0
+  ip dhcp-client
+  shutdown
+ !
+!
+--==BOUNDARY==
+EOF
+  }
+}
+
+cedge_device_list = {
+  "cedge1" = {
+    networks = ["my-vmnetwork", "my-vmnetwork"]
+    day0 = <<EOF
+Content-Type: multipart/mixed; boundary="===============3067523750048488884=="
+MIME-Version: 1.0
+
+--===============3067523750048488884==
+Content-Type: text/cloud-config; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="cloud-config"
+
+#cloud-config
+vinitparam:
+ - rcc : true
+
+--===============3067523750048488884==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="config-CSR-82DEC3C6-3A28-B866-6F4A-40BEA274CA00.txt"
+
+#cloud-boothook
+viptela-system:system
+ personality           vedge
+ device-model          vedge-CSR-1000v
+ host-name             cedge1
+ logging
+  disk
+   enable
+  !
+ !
+!
+hostname cedge1
+username admin privilege 15 secret 0 cisco
+!
+logging persistent immediate filesize 8192 size 1000000
+aaa authentication login default local
+aaa authorization exec default local none
+interface GigabitEthernet1
+ no shutdown
+ arp timeout 1200
+ ip address dhcp client-id GigabitEthernet1
+ ip redirects
+ ip dhcp client default-router distance 1
+ ip mtu    1500
+ mtu 1500
+ negotiation auto
+exit
+interface Tunnel1
+ no shutdown
+ ip unnumbered GigabitEthernet1
+ no ip redirects
+ ipv6 unnumbered GigabitEthernet1
+ no ipv6 redirects
+ tunnel source GigabitEthernet1
+ tunnel mode sdwan
+exit
+ sdwan
+  interface GigabitEthernet1
+   tunnel-interface
+    encapsulation ipsec weight 1
+    no border
+    color public-internet
+    no last-resort-circuit
+    no low-bandwidth-link
+    control-connections
+    no vbond-as-stun-server
+    vmanage-connection-preference 5
+    port-hop
+    carrier                       default
+    nat-refresh-interval          5
+    hello-interval                1000
+    hello-tolerance               12
+    no allow-service all
+    no allow-service bgp
+    allow-service dhcp
+    allow-service dns
+    allow-service icmp
+    allow-service sshd
+    allow-service netconf
+    no allow-service ntp
+    no allow-service ospf
+    no allow-service stun
+    no allow-service snmp
+   exit
+  exit
+  !
+ !
+!
+--===============3067523750048488884==
+EOF
+  }
+}
