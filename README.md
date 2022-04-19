@@ -47,7 +47,7 @@ In the vCenter UI, create the VM template for CSR1000v w/SD-WAN (aka cEdge):
 There two main was to deploy on VMware.  The first is to let the module build out the bootstrap configuration for you, while you simply supply IPv4 addressing info.  The second way is to supply the full bootstrap configuration yourself.  The second method gives you much greater control over the bootstrap configuration.  The links below have examples of each method.
 
 - [v20.4 and under](vmware/examples/v19.2.example)
-- [v20.4 and under with bootstrap](vmwware/examples/v19.2-day0.example)
+- [v20.4 and under with bootstrap](vmware/examples/v19.2-day0.example)
 - [v20.5 and up](vmware/examples/v20.7.example)
 - [v20.5 and up with bootstrap](vmware/examples/v20.7-day0.example)
 
