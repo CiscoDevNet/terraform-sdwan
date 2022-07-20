@@ -8,7 +8,7 @@
   - iGW,
   - public route table,
   - 2 subnets in different availability zones,
-  - security group for the Viptela controllers
+  - security group for the SD-WAN controllers
 */
 
 /*
@@ -21,23 +21,23 @@ data "aws_availability_zones" "available" {
 /*
   VPC
 */
-resource "aws_vpc" "viptela" {
+resource "aws_vpc" "sdwan_cp" {
   cidr_block           = "${var.cidr_block}"
   enable_dns_hostnames = true
 
   tags = {
-    Name = "Viptela Controllers"
+    Name = "SD-WAN Control Plane"
   }
 }
 
 /*
   Internet Gateway
 */
-resource "aws_internet_gateway" "viptela" {
-  vpc_id = "${aws_vpc.viptela.id}"
+resource "aws_internet_gateway" "sdwan_cp" {
+  vpc_id = "${aws_vpc.sdwan_cp.id}"
 
   tags = {
-    Name = "Viptela Controllers"
+    Name = "SD-WAN Control Plane"
   }
 }
 
@@ -45,24 +45,24 @@ resource "aws_internet_gateway" "viptela" {
   Public Subnets
 */
 resource "aws_subnet" "public_subnet_az_1" {
-  vpc_id            = "${aws_vpc.viptela.id}"
+  vpc_id            = "${aws_vpc.sdwan_cp.id}"
   cidr_block        = cidrsubnet("${var.cidr_block}", 1, 0)
   availability_zone = "${data.aws_availability_zones.available.names[0]}"
 
   tags = {
     Name = "subnet_public_az_1"
-    VPC  = "${data.aws_availability_zones.available.names[0]}_viptela"
+    VPC  = "${data.aws_availability_zones.available.names[0]}_sdwan_cp"
   }
 }
 
 resource "aws_subnet" "public_subnet_az_2" {
-  vpc_id            = "${aws_vpc.viptela.id}"
+  vpc_id            = "${aws_vpc.sdwan_cp.id}"
   cidr_block        = cidrsubnet("${var.cidr_block}", 1, 1)
   availability_zone = "${data.aws_availability_zones.available.names[1]}"
 
   tags = {
     Name = "subnet_public_az_2"
-    VPC  = "${data.aws_availability_zones.available.names[1]}_viptela"
+    VPC  = "${data.aws_availability_zones.available.names[1]}_sdwan_cp"
   }
 }
 
@@ -70,16 +70,16 @@ resource "aws_subnet" "public_subnet_az_2" {
   Public Route Table
 */
 resource "aws_route_table" "public" {
-  vpc_id = "${aws_vpc.viptela.id}"
+  vpc_id = "${aws_vpc.sdwan_cp.id}"
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.viptela.id}"
+    gateway_id = "${aws_internet_gateway.sdwan_cp.id}"
   }
 
   tags = {
-    Name = "Public Subnets"
-    VPC  = "Viptela_Public_RT"
+    Name = "SD-WAN Control Plane"
+    VPC  = "SD-WAN Control Plane"
   }
 }
 
@@ -99,9 +99,9 @@ resource "aws_route_table_association" "subnet_p2_to_rt_public" {
 /*
   Security Groups
 */
-resource "aws_security_group" "Vipela_Control_Plane" {
-  name        = "Vipela_Control_Plane"
-  description = "Allow Viptela Control Plane and Management Traffic"
+resource "aws_security_group" "sdwan_cp" {
+  name        = "SD-WAN Control Plane"
+  description = "Allow SD-WAN Control Plane and Management Traffic"
 
   ingress {
     from_port   = 23456
@@ -159,9 +159,12 @@ resource "aws_security_group" "Vipela_Control_Plane" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  vpc_id = "${aws_vpc.viptela.id}"
+  vpc_id = "${aws_vpc.sdwan_cp.id}"
 
-  tags = {
-    Name = "Viptela Control and Management"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "SD-WAN Control Plane"
+    }
+  )
 }

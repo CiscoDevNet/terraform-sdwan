@@ -1,70 +1,78 @@
-Content-Type: multipart/mixed; boundary="==BOUNDARY=="
-MIME-Version: 1.0
-
---==BOUNDARY==
-Content-Type: text/cloud-config; charset="us-ascii"
-
 #cloud-config
-vinitparam:
- - format-partition : 1
-
---==BOUNDARY==
-Content-Type: text/cloud-boothook; charset="us-ascii"
-
-#cloud-boothook
-system
- host-name vmanage
-
- aaa
-  auth-order local radius tacacs
-  usergroup basic
-   task system read write
-   task interface read write
-  !
-
-  usergroup netadmin
-  !
-
-  usergroup operator
-   task system read
-   task interface read
-   task policy read
-   task routing read
-   task security read
-  !
-
-  user admin
-   password $6$u3jhmUlHRY16I1lI$OpkApAwXhGNo2xdKR.j2x7LF7OkRa9P02aSgACGMvmhidKHvxQ2poG6HTulDYp6BXfsm3clE6dz/wvOKLxA8e1
-  !
- !
-
- logging
-  disk
-   enable
-  !
- !
-!
-
-vpn 0
- interface eth1
-  ip dhcp-client
-  tunnel-interface
-   allow-service dhcp
-   allow-service dns
-   allow-service icmp
-   no allow-service sshd
-   allow-service netconf
-   no allow-service ntp
-   no allow-service stun
-   allow-service https
-  !
-  no shutdown
- !
-!
-vpn 512
- interface eth0
-  ip dhcp-client
-  no shutdown
- !
-!
---==BOUNDARY==
+users:
+- name: admin
+  ssh_authorized_keys:
+  - ${ssh_pubkey}
+fs_setup:
+- device: "/dev/xvdb"
+  label: data
+  partition: "none"
+  filesystem: "ext4"
+mounts:
+- [ xvdb, /opt/data ]
+write_files:
+- path: /opt/web-app/etc/persona
+  owner: vmanage:vmanage-admin
+  permissions: '0644'
+  content: '{"persona":"COMPUTE_AND_DATA"}'
+- path: /etc/default/personality
+  content: "vmanage\n"
+- path: /etc/default/inited
+  content: "1\n"
+- path: /etc/confd/init/zcloud.xml
+  content: |
+    <config xmlns="http://tail-f.com/ns/config/1.0">
+      <system xmlns="http://viptela.com/system">
+        <personality>vmanage</personality>
+        <host-name>${hostname}</host-name>
+        <organization-name>${sdwan_org}</organization-name>
+        <sp-organization-name>${sdwan_org}</sp-organization-name>
+        <site-id>100</site-id>
+        <aaa>
+          <user>
+            <name>admin</name>
+            <password>$6$Yr4UfGuMs2C$2gsBhG9T8pWIG3RQYKlQiBEW7ncsiS2oFktyUBXzlHDFzNG3X4bz0qkx.95npJHN7dlp58mCZ4uBVYrlewRek1</password>
+          </user>
+        </aaa>
+        <ntp>
+          <server>
+            <name>169.254.169.123</name>
+            <vpn>512</vpn>
+            <prefer>true</prefer>
+          </server>
+        </ntp>
+      </system>
+      <vpn xmlns="http://viptela.com/vpn">
+        <vpn-instance>
+          <vpn-id>0</vpn-id>
+          <interface>
+            <if-name>eth1</if-name>
+            <ip>
+              <dhcp-client>true</dhcp-client>
+            </ip>
+            <tunnel-interface>
+              <allow-service>
+                <dhcp>true</dhcp>
+                <dns>true</dns>
+                <ntp>true</ntp>
+                <icmp>true</icmp>
+                <sshd>true</sshd>
+                <netconf>true</netconf>
+                <https>true</https>
+              </allow-service>
+            </tunnel-interface>
+            <shutdown>false</shutdown>
+          </interface>
+        </vpn-instance>
+        <vpn-instance>
+          <vpn-id>512</vpn-id>
+          <interface>
+            <if-name>eth0</if-name>
+            <ip>
+              <dhcp-client>true</dhcp-client>
+            </ip>
+            <shutdown>false</shutdown>
+          </interface>
+        </vpn-instance>
+      </vpn>
+    </config>

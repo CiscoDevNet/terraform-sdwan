@@ -1,71 +1,68 @@
-Content-Type: multipart/mixed; boundary="==BOUNDARY=="
-MIME-Version: 1.0
-
---==BOUNDARY==
-Content-Type: text/cloud-boothook; charset="us-ascii"
-
-#cloud-boothook
-system
- host-name vbond
- vbond ztp.viptela.com local
-
- aaa
-  auth-order local radius tacacs
-  usergroup basic
-   task system read write
-   task interface read write
-  !
-
-  usergroup netadmin
-  !
-
-  usergroup operator
-   task system read
-   task interface read
-   task policy read
-   task routing read
-   task security read
-  !
-
-  user admin
-   password $6$Ju0z0n7YKtLgYWlJ$38aW.MBat6e8xL2vuLdbfGVH.DAYh7lq2nA/dBdvL.rWdJyGGB2gxLeVh8jQBKTCxti8vX5RKpbtzEadiZc6J.
-  !
- !
-
- logging
-  disk
-   enable
-  !
- !
-!
-
-omp
- no shutdown
- graceful-restart
- advertise connected
- advertise static
-!
-
-security
- ipsec
-  authentication-type ah-sha1-hmac sha1-hmac
- !
-!
-
-vpn 0
- interface eth1
-  ip dhcp-client
-  tunnel-interface
-   allow-service all
-  !
-  no shutdown
- !
-!
-
-vpn 512
- interface eth0
-  ip dhcp-client
-  no shutdown
- !
-!
---==BOUNDARY==
+#cloud-config
+users:
+- name: admin
+  ssh_authorized_keys:
+  - ${ssh_pubkey}
+write_files:
+- path: /etc/default/personality
+  content: "vedge\n"
+- path: /etc/default/inited
+  content: "1\n"
+- path: /etc/confd/init/zcloud.xml
+  content: |
+    <config xmlns="http://tail-f.com/ns/config/1.0">
+      <system xmlns="http://viptela.com/system">
+        <personality>vedge</personality>
+        <host-name>${hostname}</host-name>
+        <organization-name>${sdwan_org}</organization-name>
+        <sp-organization-name>${sdwan_org}</sp-organization-name>
+        <site-id>100</site-id>
+        <aaa>
+          <user>
+            <name>admin</name>
+            <password>$6$Yr4UfGuMs2C$2gsBhG9T8pWIG3RQYKlQiBEW7ncsiS2oFktyUBXzlHDFzNG3X4bz0qkx.95npJHN7dlp58mCZ4uBVYrlewRek1</password>
+          </user>
+        </aaa>
+        <ntp>
+          <server>
+            <name>169.254.169.123</name>
+            <vpn>512</vpn>
+            <prefer>true</prefer>
+          </server>
+        </ntp>
+      </system>
+      <vpn xmlns="http://viptela.com/vpn">
+        <vpn-instance>
+          <vpn-id>0</vpn-id>
+          <interface>
+            <if-name>ge0/0</if-name>
+            <ip>
+              <dhcp-client>true</dhcp-client>
+            </ip>
+            <tunnel-interface>
+              <encapsulation>
+                <encap>ipsec</encap>
+              </encapsulation>
+              <color>
+                <value>default</value>
+              </color>
+              <allow-service>
+                <sshd>true</sshd>
+                <netconf>true</netconf>
+              </allow-service>
+            </tunnel-interface>
+            <shutdown>false</shutdown>
+          </interface>
+        </vpn-instance>
+        <vpn-instance>
+          <vpn-id>512</vpn-id>
+          <interface>
+            <if-name>eth0</if-name>
+            <ip>
+              <dhcp-client>true</dhcp-client>
+            </ip>
+            <shutdown>false</shutdown>
+          </interface>
+        </vpn-instance>
+      </vpn>
+    </config>
