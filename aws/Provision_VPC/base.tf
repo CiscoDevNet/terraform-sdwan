@@ -1,13 +1,13 @@
 /*
   Requires:
   - AWS Region
-  - CIDR block with <= 28 bit prefix length
+  - CIDR block with <= 27 bit prefix length
 
   Provisions:
   - VPC,
   - iGW,
   - public route table,
-  - 2 subnets in different availability zones,
+  - 4 subnets in 2 different availability zones,
   - security group for the SD-WAN controllers
 */
 
@@ -44,9 +44,31 @@ resource "aws_internet_gateway" "sdwan_cp" {
 /*
   Public Subnets
 */
+resource "aws_subnet" "mgmt_subnet_az_1" {
+  vpc_id            = "${aws_vpc.sdwan_cp.id}"
+  cidr_block        = cidrsubnet("${var.cidr_block}", 2, 0)
+  availability_zone = "${data.aws_availability_zones.available.names[0]}"
+
+  tags = {
+    Name = "subnet_mgmt_az_1"
+    VPC  = "${data.aws_availability_zones.available.names[0]}_sdwan_cp"
+  }
+}
+
+resource "aws_subnet" "mgmt_subnet_az_2" {
+  vpc_id            = "${aws_vpc.sdwan_cp.id}"
+  cidr_block        = cidrsubnet("${var.cidr_block}", 2, 2)
+  availability_zone = "${data.aws_availability_zones.available.names[1]}"
+
+  tags = {
+    Name = "subnet_mgmt_az_2"
+    VPC  = "${data.aws_availability_zones.available.names[1]}_sdwan_cp"
+  }
+}
+
 resource "aws_subnet" "public_subnet_az_1" {
   vpc_id            = "${aws_vpc.sdwan_cp.id}"
-  cidr_block        = cidrsubnet("${var.cidr_block}", 1, 0)
+  cidr_block        = cidrsubnet("${var.cidr_block}", 2, 1)
   availability_zone = "${data.aws_availability_zones.available.names[0]}"
 
   tags = {
@@ -57,7 +79,7 @@ resource "aws_subnet" "public_subnet_az_1" {
 
 resource "aws_subnet" "public_subnet_az_2" {
   vpc_id            = "${aws_vpc.sdwan_cp.id}"
-  cidr_block        = cidrsubnet("${var.cidr_block}", 1, 1)
+  cidr_block        = cidrsubnet("${var.cidr_block}", 2, 3)
   availability_zone = "${data.aws_availability_zones.available.names[1]}"
 
   tags = {
@@ -86,6 +108,16 @@ resource "aws_route_table" "public" {
 /*
   Public Route Table Associations
 */
+resource "aws_route_table_association" "subnet_m1_to_rt_public" {
+  subnet_id      = "${aws_subnet.mgmt_subnet_az_1.id}"
+  route_table_id = "${aws_route_table.public.id}"
+}
+
+resource "aws_route_table_association" "subnet_m2_to_rt_public" {
+  subnet_id      = "${aws_subnet.mgmt_subnet_az_2.id}"
+  route_table_id = "${aws_route_table.public.id}"
+}
+
 resource "aws_route_table_association" "subnet_p1_to_rt_public" {
   subnet_id      = "${aws_subnet.public_subnet_az_1.id}"
   route_table_id = "${aws_route_table.public.id}"

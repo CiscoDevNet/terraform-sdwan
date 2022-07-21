@@ -3,6 +3,7 @@ variable "viptela_instances_type" {}
 variable "region" {}
 variable "sdwan_cp_sg_id" {}
 variable "counter" {}
-variable "subnets" {}
+variable "mgmt_subnets" {}
+variable "public_subnets" {}
 variable "ssh_pubkey_file" {}
 variable "sdwan_org" {}

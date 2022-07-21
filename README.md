@@ -127,7 +127,7 @@ Contact workshop lead to share AMI's with your AWS account.
 
 Deploy AWS VPC for Cisco SD-WAN controllers:
 Edit Provision_VPC/my_vpc_variables.auto.tfvars.json with your region and VPC cidr_block.
-> Note: CIDR block must have a prefix length less than 28 to cover subnets in 2 availability zones
+> Note: CIDR block must have a prefix length less than 27 to cover 4 subnets in 2 availability zones
 ```
 {
     "region": "us-east-1",

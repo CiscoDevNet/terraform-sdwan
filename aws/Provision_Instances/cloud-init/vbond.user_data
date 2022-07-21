@@ -17,6 +17,7 @@ write_files:
         <organization-name>${sdwan_org}</organization-name>
         <sp-organization-name>${sdwan_org}</sp-organization-name>
         <site-id>100</site-id>
+        <system-ip>192.168.2.${index}</system-ip>
         <aaa>
           <user>
             <name>admin</name>
@@ -26,7 +27,6 @@ write_files:
         <ntp>
           <server>
             <name>169.254.169.123</name>
-            <vpn>512</vpn>
             <prefer>true</prefer>
           </server>
         </ntp>

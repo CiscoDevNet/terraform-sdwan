@@ -3,10 +3,11 @@ resource "aws_instance" "vsmart" {
   ami                         = "${var.vsmart_ami}"
   instance_type               = "${var.viptela_instances_type}"
   vpc_security_group_ids      = ["${var.sdwan_cp_sg_id}"]
-  subnet_id                   = "${var.subnets[ count.index % length(var.subnets) ]}"
+  subnet_id                   = "${var.mgmt_subnets[ count.index % length(var.mgmt_subnets) ]}"
   associate_public_ip_address = true
   source_dest_check           = true
   user_data                   = templatefile("cloud-init/vsmart.user_data", {
+    index      = count.index + 1
     hostname   = format("sdwan-vsmart-%02d", count.index)
     ssh_pubkey = file(pathexpand(var.ssh_pubkey_file))
     sdwan_org  = var.sdwan_org
@@ -18,7 +19,7 @@ resource "aws_instance" "vsmart" {
 
 resource "aws_network_interface" "vsmart" {
   count = "${var.counter}"
-  subnet_id                   = "${var.subnets[ count.index % length(var.subnets) ]}"
+  subnet_id                   = "${var.public_subnets[ count.index % length(var.public_subnets) ]}"
   security_groups             = ["${var.sdwan_cp_sg_id}"]
   source_dest_check           = true
 
