@@ -1,6 +1,7 @@
 variable "vsmart_ami" {}
 variable "viptela_instances_type" {}
 variable "region" {}
+variable "common_tags" {}
 variable "sdwan_cp_sg_id" {}
 variable "counter" {}
 variable "mgmt_subnets" {}

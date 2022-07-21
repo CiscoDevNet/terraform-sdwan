@@ -1,6 +1,7 @@
 module "vsmart" {
   source                 = "./vsmart"
   region                 = "${data.terraform_remote_state.spam.outputs.region}"
+  common_tags            = "${data.terraform_remote_state.spam.outputs.common_tags}"
   sdwan_cp_sg_id         = "${data.terraform_remote_state.spam.outputs.sdwan_cp_sg_id}"
   vsmart_ami             = "${var.vsmart_ami}"
   viptela_instances_type = "${var.vsmart_instances_type}"

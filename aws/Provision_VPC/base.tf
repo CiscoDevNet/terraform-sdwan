@@ -25,9 +25,12 @@ resource "aws_vpc" "sdwan_cp" {
   cidr_block           = "${var.cidr_block}"
   enable_dns_hostnames = true
 
-  tags = {
-    Name = "SD-WAN Control Plane"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "SD-WAN CP"
+    }
+  )
 }
 
 /*
@@ -36,9 +39,12 @@ resource "aws_vpc" "sdwan_cp" {
 resource "aws_internet_gateway" "sdwan_cp" {
   vpc_id = "${aws_vpc.sdwan_cp.id}"
 
-  tags = {
-    Name = "SD-WAN Control Plane"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "SD-WAN CP"
+    }
+  )
 }
 
 /*
@@ -49,10 +55,13 @@ resource "aws_subnet" "mgmt_subnet_az_1" {
   cidr_block        = cidrsubnet("${var.cidr_block}", 2, 0)
   availability_zone = "${data.aws_availability_zones.available.names[0]}"
 
-  tags = {
-    Name = "subnet_mgmt_az_1"
-    VPC  = "${data.aws_availability_zones.available.names[0]}_sdwan_cp"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "subnet_mgmt_az_1"
+      VPC  = "SD-WAN CP"
+    }
+  )
 }
 
 resource "aws_subnet" "mgmt_subnet_az_2" {
@@ -60,10 +69,13 @@ resource "aws_subnet" "mgmt_subnet_az_2" {
   cidr_block        = cidrsubnet("${var.cidr_block}", 2, 2)
   availability_zone = "${data.aws_availability_zones.available.names[1]}"
 
-  tags = {
-    Name = "subnet_mgmt_az_2"
-    VPC  = "${data.aws_availability_zones.available.names[1]}_sdwan_cp"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "subnet_mgmt_az_2"
+      VPC  = "SD-WAN CP"
+    }
+  )
 }
 
 resource "aws_subnet" "public_subnet_az_1" {
@@ -71,10 +83,13 @@ resource "aws_subnet" "public_subnet_az_1" {
   cidr_block        = cidrsubnet("${var.cidr_block}", 2, 1)
   availability_zone = "${data.aws_availability_zones.available.names[0]}"
 
-  tags = {
-    Name = "subnet_public_az_1"
-    VPC  = "${data.aws_availability_zones.available.names[0]}_sdwan_cp"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "subnet_public_az_1"
+      VPC  = "SD-WAN CP"
+    }
+  )
 }
 
 resource "aws_subnet" "public_subnet_az_2" {
@@ -82,10 +97,13 @@ resource "aws_subnet" "public_subnet_az_2" {
   cidr_block        = cidrsubnet("${var.cidr_block}", 2, 3)
   availability_zone = "${data.aws_availability_zones.available.names[1]}"
 
-  tags = {
-    Name = "subnet_public_az_2"
-    VPC  = "${data.aws_availability_zones.available.names[1]}_sdwan_cp"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "subnet_public_az_2"
+      VPC  = "SD-WAN CP"
+    }
+  )
 }
 
 /*
@@ -99,10 +117,13 @@ resource "aws_route_table" "public" {
     gateway_id = "${aws_internet_gateway.sdwan_cp.id}"
   }
 
-  tags = {
-    Name = "SD-WAN Control Plane"
-    VPC  = "SD-WAN Control Plane"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "SD-WAN CP"
+      VPC  = "SD-WAN CP"
+    }
+  )
 }
 
 /*
@@ -132,8 +153,8 @@ resource "aws_route_table_association" "subnet_p2_to_rt_public" {
   Security Groups
 */
 resource "aws_security_group" "sdwan_cp" {
-  name        = "SD-WAN Control Plane"
-  description = "Allow SD-WAN Control Plane and Management Traffic"
+  name        = "SD-WAN CP"
+  description = "Allow SD-WAN CP and Management Traffic"
 
   ingress {
     from_port   = 23456
@@ -196,7 +217,7 @@ resource "aws_security_group" "sdwan_cp" {
   tags = merge(
     var.common_tags,
     {
-      Name = "SD-WAN Control Plane"
+      Name = "SD-WAN CP"
     }
   )
 }

@@ -1,6 +1,7 @@
 module "vbond" {
   source                 = "./vbond"
   region                 = "${data.terraform_remote_state.spam.outputs.region}"
+  common_tags            = "${data.terraform_remote_state.spam.outputs.common_tags}"
   sdwan_cp_sg_id         = "${data.terraform_remote_state.spam.outputs.sdwan_cp_sg_id}"
   vbond_ami              = "${var.vbond_ami}"
   viptela_instances_type = "${var.vbond_instances_type}"

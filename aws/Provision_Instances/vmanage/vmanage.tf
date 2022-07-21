@@ -19,9 +19,12 @@ resource "aws_instance" "vmanage" {
       volume_size           = 30
   }
 
-  tags = {
-    Name  = "${format("sdwan-vmanage-%02d", count.index)}"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name  = "${format("sdwan-vmanage-%02d", count.index)}"
+    }
+  )
 }
 
 resource "aws_network_interface" "vmanage" {
@@ -40,16 +43,22 @@ resource "aws_eip" "vmanage_1" {
   count = "${var.counter}"
   network_interface = "${aws_instance.vmanage[count.index].primary_network_interface_id}"
   vpc               = true
-  tags = {
-    Name  = "${format("eip1_vmanage-%02d", count.index)}"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name  = "${format("eip1_vmanage-%02d", count.index)}"
+    }
+  )
 }
 
 resource "aws_eip" "vmanage_2" {
   count = "${var.counter}"
   network_interface = "${aws_network_interface.vmanage[count.index].id}"
   vpc               = true
-  tags = {
-    Name  = "${format("eip2_vmanage-%02d", count.index)}"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name  = "${format("eip2_vmanage-%02d", count.index)}"
+    }
+  )
 }

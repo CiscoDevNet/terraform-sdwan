@@ -1,6 +1,7 @@
 module "vmanage" {
   source                 = "./vmanage"
   region                 = "${data.terraform_remote_state.spam.outputs.region}"
+  common_tags            = "${data.terraform_remote_state.spam.outputs.common_tags}"
   sdwan_cp_sg_id         = "${data.terraform_remote_state.spam.outputs.sdwan_cp_sg_id}"
   vmanage_ami            = "${var.vmanage_ami}"
   viptela_instances_type = "${var.vmanage_instances_type}"

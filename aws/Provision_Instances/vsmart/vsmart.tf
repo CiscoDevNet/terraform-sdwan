@@ -11,10 +11,14 @@ resource "aws_instance" "vsmart" {
     hostname   = format("sdwan-vsmart-%02d", count.index)
     ssh_pubkey = file(pathexpand(var.ssh_pubkey_file))
     sdwan_org  = var.sdwan_org
- })
-  tags = {
-    Name  = "${format("sdwan-vsmart-%02d", count.index)}"
-  }
+  })
+
+  tags = merge(
+    var.common_tags,
+    {
+      Name  = "${format("sdwan-vsmart-%02d", count.index)}"
+    }
+  )
 }
 
 resource "aws_network_interface" "vsmart" {
@@ -33,16 +37,22 @@ resource "aws_eip" "vsmart_1" {
   count = "${var.counter}"
   network_interface = "${aws_instance.vsmart[count.index].primary_network_interface_id}"
   vpc               = true
-  tags = {
-    Name  = "${format("eip1_vsmart-%02d", count.index)}"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name  = "${format("eip1_vsmart-%02d", count.index)}"
+    }
+  )
 }
 
 resource "aws_eip" "vsmart_2" {
   count = "${var.counter}"
   network_interface = "${aws_network_interface.vsmart[count.index].id}"
   vpc               = true
-  tags = {
-    Name  = "${format("eip2_vsmart-%02d", count.index)}"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name  = "${format("eip2_vsmart-%02d", count.index)}"
+    }
+  )
 }

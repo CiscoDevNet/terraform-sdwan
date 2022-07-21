@@ -2,6 +2,10 @@ output "region" {
   value = "${var.region}"
 }
 
+output "common_tags" {
+  value = "${var.common_tags}"
+}
+
 output "sdwan_cp_vpc_id" {
   value = "${aws_vpc.sdwan_cp.id}"
 }
