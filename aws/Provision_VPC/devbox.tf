@@ -1,9 +1,9 @@
 resource "aws_instance" "devbox" {
-    ami                         = "ami-02f3416038bdb17fb"
-    instance_type               = "t2.micro"
+    ami                         = "${var.devbox_ami}"
+    instance_type               = "${var.devbox_instance_type}"
     vpc_security_group_ids      = ["${aws_security_group.sdwan_cp.id}"]
     subnet_id                   = "${aws_subnet.public_subnet_az_1.id}"
-    private_ip                  = "10.100.1.10"
+    private_ip                  = cidrhost(aws_subnet.public_subnet_az_1.cidr_block, 10)
     associate_public_ip_address = true
     user_data                   = <<EOF
 #cloud-config
