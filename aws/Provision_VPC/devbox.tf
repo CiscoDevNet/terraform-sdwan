@@ -1,5 +1,20 @@
+data "aws_ami" "ubuntu-jammy" {
+  most_recent = true
+  owners      = ["099720109477"]
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
 resource "aws_instance" "devbox" {
-    ami                         = "${var.devbox_ami}"
+    ami                         = "${data.aws_ami.ubuntu-jammy.id}"
     instance_type               = "${var.devbox_instance_type}"
     vpc_security_group_ids      = ["${aws_security_group.sdwan_cp.id}"]
     subnet_id                   = "${aws_subnet.public_subnet_az_1.id}"
