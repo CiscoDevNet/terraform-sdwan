@@ -9,7 +9,7 @@ resource "aws_instance" "vsmart" {
   user_data                   = templatefile("cloud-init/vsmart.user_data", {
     index      = count.index + 1
     hostname   = format("sdwan-vsmart-%02d", count.index)
-    ssh_pubkey = file(pathexpand(var.ssh_pubkey_file))
+    ssh_pubkey = var.ssh_pubkey
     sdwan_org  = var.sdwan_org
   })
 

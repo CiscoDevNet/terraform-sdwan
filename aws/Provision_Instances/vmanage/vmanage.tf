@@ -9,7 +9,7 @@ resource "aws_instance" "vmanage" {
   user_data                   = templatefile("cloud-init/vmanage.user_data", {
     index      = count.index + 1
     hostname   = format("sdwan-vmanage-%02d", count.index)
-    ssh_pubkey = file(pathexpand(var.ssh_pubkey_file))
+    ssh_pubkey = var.ssh_pubkey
     sdwan_org  = var.sdwan_org
   })
 

@@ -7,7 +7,7 @@ variable "vsmart_count" {}
 variable "vbond_instances_type" {}
 variable "vmanage_instances_type" {}
 variable "vsmart_instances_type" {}
-variable "ssh_pubkey_file" {}
+variable "ssh_pubkey" {}
 variable "sdwan_org" {}
 variable "network_state_file" {
   default = "../Provision_VPC/terraform.tfstate"
