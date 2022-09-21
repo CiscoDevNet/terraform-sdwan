@@ -4,6 +4,7 @@ module "vbond" {
   common_tags            = "${data.terraform_remote_state.spam.outputs.common_tags}"
   sdwan_cp_sg_id         = "${data.terraform_remote_state.spam.outputs.sdwan_cp_sg_id}"
   vbond_ami              = "${var.vbond_ami}"
+  vbond_day0             = "${var.vbond_day0}"
   viptela_instances_type = "${var.vbond_instances_type}"
   ssh_pubkey             = "${var.ssh_pubkey}"
   sdwan_org              = "${var.sdwan_org}"

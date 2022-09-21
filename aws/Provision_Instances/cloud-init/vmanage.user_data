@@ -1,3 +1,4 @@
+%{ if day0 != "" }${day0}%{ else }
 #cloud-config
 users:
 - name: admin
@@ -76,3 +77,4 @@ write_files:
         </vpn-instance>
       </vpn>
     </config>
+%{ endif }

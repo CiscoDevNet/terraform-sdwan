@@ -1,9 +1,18 @@
 variable "vbond_ami" {}
 variable "vbond_count" {}
+variable "vbond_day0" {
+  default = ""
+}
 variable "vmanage_ami" {}
 variable "vmanage_count" {}
+variable "vmanage_day0" {
+  default = ""
+}
 variable "vsmart_ami" {}
 variable "vsmart_count" {}
+variable "vsmart_day0" {
+  default = ""
+}
 variable "vbond_instances_type" {}
 variable "vmanage_instances_type" {}
 variable "vsmart_instances_type" {}

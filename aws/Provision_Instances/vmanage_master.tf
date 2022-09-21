@@ -4,6 +4,7 @@ module "vmanage" {
   common_tags            = "${data.terraform_remote_state.spam.outputs.common_tags}"
   sdwan_cp_sg_id         = "${data.terraform_remote_state.spam.outputs.sdwan_cp_sg_id}"
   vmanage_ami            = "${var.vmanage_ami}"
+  vmanage_day0           = "${var.vmanage_day0}"
   viptela_instances_type = "${var.vmanage_instances_type}"
   ssh_pubkey             = "${var.ssh_pubkey}"
   sdwan_org              = "${var.sdwan_org}"

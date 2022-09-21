@@ -1,4 +1,5 @@
 variable "vbond_ami" {}
+variable "vbond_day0" {}
 variable "viptela_instances_type" {}
 variable "region" {}
 variable "common_tags" {}

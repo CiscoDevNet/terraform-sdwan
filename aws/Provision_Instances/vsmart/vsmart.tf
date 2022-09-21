@@ -7,6 +7,7 @@ resource "aws_instance" "vsmart" {
   associate_public_ip_address = true
   source_dest_check           = true
   user_data                   = templatefile("cloud-init/vsmart.user_data", {
+    day0       = var.vsmart_day0
     index      = count.index + 1
     hostname   = format("sdwan-vsmart-%02d", count.index)
     ssh_pubkey = var.ssh_pubkey

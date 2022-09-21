@@ -1,4 +1,5 @@
 variable "vsmart_ami" {}
+variable "vsmart_day0" {}
 variable "viptela_instances_type" {}
 variable "region" {}
 variable "common_tags" {}
