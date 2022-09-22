@@ -1,3 +1,9 @@
+# temporary hack
+data "aws_subnet" "public_subnet" {
+  count = "${var.counter}"
+  id    = "${var.public_subnets[ count.index % length(var.public_subnets) ]}"
+}
+
 resource "aws_instance" "vbond" {
   count = "${var.counter}"
   ami                         = "${var.vbond_ami}"
@@ -25,6 +31,7 @@ resource "aws_instance" "vbond" {
 resource "aws_network_interface" "vbond" {
   count = "${var.counter}"
   subnet_id                   = "${var.public_subnets[ count.index % length(var.public_subnets) ]}"
+  private_ips                 = [cidrhost(data.aws_subnet.public_subnet[count.index].cidr_block, 12)]
   security_groups             = ["${var.sdwan_cp_sg_id}"]
   source_dest_check           = true
 
