@@ -23,7 +23,9 @@ resource "aws_instance" "vmanage" {
   ebs_block_device {
       device_name           = "/dev/xvdb"
       delete_on_termination = true
-      volume_size           = 30
+      volume_size           = 60
+      volume_type           = "io1"
+      iops                  = 3000
   }
 
   tags = merge(
