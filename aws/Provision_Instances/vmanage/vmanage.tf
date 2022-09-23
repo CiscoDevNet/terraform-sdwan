@@ -34,6 +34,8 @@ resource "aws_instance" "vmanage" {
       Name  = "${format("sdwan-vmanage-%02d", count.index)}"
     }
   )
+
+  depends_on = [aws_network_interface.vmanage]
 }
 
 resource "aws_network_interface" "vmanage" {
@@ -42,11 +44,13 @@ resource "aws_network_interface" "vmanage" {
   private_ips                 = [cidrhost(data.aws_subnet.public_subnet[count.index].cidr_block, 11)]
   security_groups             = ["${var.sdwan_cp_sg_id}"]
   source_dest_check           = true
+}
 
-  attachment {
-    instance     = "${aws_instance.vmanage[count.index].id}"
-    device_index = 1
-  }
+resource "aws_network_interface_attachment" "vmanage" {
+  count = "${var.counter}"
+  instance_id          = aws_instance.vmanage[count.index].id
+  network_interface_id = aws_network_interface.vmanage[count.index].id
+  device_index         = 1
 }
 
 resource "aws_eip" "vmanage_1" {

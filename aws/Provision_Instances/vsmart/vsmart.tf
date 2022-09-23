@@ -26,6 +26,8 @@ resource "aws_instance" "vsmart" {
       Name  = "${format("sdwan-vsmart-%02d", count.index)}"
     }
   )
+
+  depends_on = [aws_network_interface.vsmart]
 }
 
 resource "aws_network_interface" "vsmart" {
@@ -34,13 +36,14 @@ resource "aws_network_interface" "vsmart" {
   private_ips                 = [cidrhost(data.aws_subnet.public_subnet[count.index].cidr_block, 13)]
   security_groups             = ["${var.sdwan_cp_sg_id}"]
   source_dest_check           = true
-
-  attachment {
-    instance     = "${aws_instance.vsmart[count.index].id}"
-    device_index = 1
-  }
 }
 
+resource "aws_network_interface_attachment" "vsmart" {
+  count = "${var.counter}"
+  instance_id          = aws_instance.vsmart[count.index].id
+  network_interface_id = aws_network_interface.vsmart[count.index].id
+  device_index         = 1
+}
 resource "aws_eip" "vsmart_1" {
   count = "${var.counter}"
   network_interface = "${aws_instance.vsmart[count.index].primary_network_interface_id}"

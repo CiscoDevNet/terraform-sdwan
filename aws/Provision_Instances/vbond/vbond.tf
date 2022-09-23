@@ -26,6 +26,8 @@ resource "aws_instance" "vbond" {
       Name  = "${format("sdwan-vbond-%02d", count.index)}"
     }
   )
+
+  depends_on = [aws_network_interface.vbond]
 }
 
 resource "aws_network_interface" "vbond" {
@@ -34,11 +36,13 @@ resource "aws_network_interface" "vbond" {
   private_ips                 = [cidrhost(data.aws_subnet.public_subnet[count.index].cidr_block, 12)]
   security_groups             = ["${var.sdwan_cp_sg_id}"]
   source_dest_check           = true
+}
 
-  attachment {
-    instance     = "${aws_instance.vbond[count.index].id}"
-    device_index = 1
-  }
+resource "aws_network_interface_attachment" "vbond" {
+  count = "${var.counter}"
+  instance_id          = aws_instance.vbond[count.index].id
+  network_interface_id = aws_network_interface.vbond[count.index].id
+  device_index         = 1
 }
 
 resource "aws_eip" "vbond_1" {
