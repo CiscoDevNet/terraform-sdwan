@@ -40,6 +40,13 @@ runcmd:
 - sed -i 's/^Allow/#Allow/' /etc/tinyproxy/tinyproxy.conf
 - sed -i 's/^ConnectPort/#ConnectPort/' /etc/tinyproxy/tinyproxy.conf
 - systemctl restart tinyproxy
+- chown -R cisco:cisco /home/cisco
+write_files:
+- path: /home/cisco/.bash_history
+  permissions: '0600'
+  content: |
+    sudo systemctl restart tinyproxy
+    sudo journalctl -f -u tinyproxy
 EOF
 
     tags = merge(
