@@ -1,3 +1,4 @@
+variable "ssh_pubkey" {}
 variable "region" {}
 variable "cidr_block" {}
 variable "acl_cidr_blocks" {
