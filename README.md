@@ -1,4 +1,4 @@
-# terraform-viptela#
+# terraform-viptela
 
 This repo contains terraform code for deploying the Cisco SD-WAN (Viptela) control plane components in various cloud environments.
 
