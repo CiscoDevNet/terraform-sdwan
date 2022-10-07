@@ -23,16 +23,13 @@ resource "aws_instance" "devbox" {
     user_data                   = <<EOF
 #cloud-config
 hostname: devbox
-ssh_pwauth: yes
 users:
 - name: cisco
   gecos: Cisco user
   shell: /bin/bash
   groups: [adm, users, crontab, kvm, tcpdump, _ssh, admin, netdev]
-  passwd: $6$329577c85ea66998$tTtlYqQIpfCGvqNZ2nICRWOSfyIV0/RO0ZWtFwpSJ0bBvlQoCowl6fO9SjzerDwmKYutIbPMAub7B4K/JG4c/0
   ssh_authorized_keys:
   - ${var.ssh_pubkey}
-  lock_passwd: False
   sudo: ALL=(ALL) NOPASSWD:ALL
 packages:
 - net-tools
