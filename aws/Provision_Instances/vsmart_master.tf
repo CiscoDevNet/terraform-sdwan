@@ -6,6 +6,7 @@ module "vsmart" {
   vsmart_ami             = "${var.vsmart_ami}"
   vsmart_day0            = "${var.vsmart_day0}"
   viptela_instances_type = "${var.vsmart_instances_type}"
+  enable_eip_mgmt        = "${var.enable_eip_mgmt}"
   ssh_pubkey             = "${var.ssh_pubkey}"
   sdwan_org              = "${var.sdwan_org}"
   counter                = "${var.vsmart_count}"

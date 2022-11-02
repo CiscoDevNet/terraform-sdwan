@@ -44,26 +44,26 @@ resource "aws_network_interface_attachment" "vsmart" {
   network_interface_id = aws_network_interface.vsmart[count.index].id
   device_index         = 1
 }
-resource "aws_eip" "vsmart_1" {
-  count = "${var.counter}"
+resource "aws_eip" "vsmart_mgmt" {
+  count = var.enable_eip_mgmt ? var.counter : 0
   network_interface = "${aws_instance.vsmart[count.index].primary_network_interface_id}"
   vpc               = true
   tags = merge(
     var.common_tags,
     {
-      Name  = "${format("eip1_vsmart-%02d", count.index)}"
+      Name  = "${format("eip_mgmt_vsmart-%02d", count.index)}"
     }
   )
 }
 
-resource "aws_eip" "vsmart_2" {
+resource "aws_eip" "vsmart_public" {
   count = "${var.counter}"
   network_interface = "${aws_network_interface.vsmart[count.index].id}"
   vpc               = true
   tags = merge(
     var.common_tags,
     {
-      Name  = "${format("eip2_vsmart-%02d", count.index)}"
+      Name  = "${format("eip_vsmart-%02d", count.index)}"
     }
   )
 }

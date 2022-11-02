@@ -3,7 +3,7 @@ output "vmanages_vmanageEth0Ip" {
 }
 
 output "vmanages_vmanageEth0EIP" {
-  value = aws_eip.vmanage_1[*].public_ip
+  value = var.enable_eip_mgmt ? aws_eip.vmanage_mgmt[*].public_ip : null
 }
 
 output "vmanages_vmanageEth1Ip" {
@@ -11,5 +11,5 @@ output "vmanages_vmanageEth1Ip" {
 }
 
 output "vmanages_vmanageEth1EIP" {
-  value = aws_eip.vmanage_2[*].public_ip
+  value = aws_eip.vmanage_public[*].public_ip
 }

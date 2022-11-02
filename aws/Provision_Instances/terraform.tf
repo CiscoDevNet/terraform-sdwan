@@ -16,6 +16,9 @@ variable "vsmart_day0" {
 variable "vbond_instances_type" {}
 variable "vmanage_instances_type" {}
 variable "vsmart_instances_type" {}
+variable "enable_eip_mgmt" {
+  default = false
+}
 variable "ssh_pubkey" {}
 variable "sdwan_org" {}
 variable "network_state_file" {

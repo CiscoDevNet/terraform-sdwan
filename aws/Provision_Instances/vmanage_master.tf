@@ -6,6 +6,7 @@ module "vmanage" {
   vmanage_ami            = "${var.vmanage_ami}"
   vmanage_day0           = "${var.vmanage_day0}"
   viptela_instances_type = "${var.vmanage_instances_type}"
+  enable_eip_mgmt        = "${var.enable_eip_mgmt}"
   ssh_pubkey             = "${var.ssh_pubkey}"
   sdwan_org              = "${var.sdwan_org}"
   counter                = "${var.vmanage_count}"

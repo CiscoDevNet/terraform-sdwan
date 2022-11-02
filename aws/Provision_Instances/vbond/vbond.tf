@@ -45,26 +45,26 @@ resource "aws_network_interface_attachment" "vbond" {
   device_index         = 1
 }
 
-resource "aws_eip" "vbond_1" {
-  count = "${var.counter}"
+resource "aws_eip" "vbond_mgmt" {
+  count = var.enable_eip_mgmt ? var.counter : 0
   network_interface = "${aws_instance.vbond[count.index].primary_network_interface_id}"
   vpc               = true
   tags = merge(
     var.common_tags,
     {
-      Name  = "${format("eip1_vbond-%02d", count.index)}"
+      Name  = "${format("eip_mgmt_vbond-%02d", count.index)}"
     }
   )
 }
 
-resource "aws_eip" "vbond_2" {
+resource "aws_eip" "vbond_public" {
   count = "${var.counter}"
   network_interface = "${aws_network_interface.vbond[count.index].id}"
   vpc               = true
   tags = merge(
     var.common_tags,
     {
-      Name  = "${format("eip2_vbond-%02d", count.index)}"
+      Name  = "${format("eip_vbond-%02d", count.index)}"
     }
   )
 }

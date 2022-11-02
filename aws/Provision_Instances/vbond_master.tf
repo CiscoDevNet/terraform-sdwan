@@ -6,6 +6,7 @@ module "vbond" {
   vbond_ami              = "${var.vbond_ami}"
   vbond_day0             = "${var.vbond_day0}"
   viptela_instances_type = "${var.vbond_instances_type}"
+  enable_eip_mgmt        = "${var.enable_eip_mgmt}"
   ssh_pubkey             = "${var.ssh_pubkey}"
   sdwan_org              = "${var.sdwan_org}"
   counter                = "${var.vbond_count}"

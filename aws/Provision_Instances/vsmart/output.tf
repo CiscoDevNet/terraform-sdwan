@@ -3,7 +3,7 @@ output "vsmarts_vsmartEth0Ip" {
 }
 
 output "vsmarts_vsmartEth0EIP" {
-  value = aws_eip.vsmart_1[*].public_ip
+  value = var.enable_eip_mgmt ? aws_eip.vsmart_mgmt[*].public_ip : null
 }
 
 output "vsmarts_vsmartEth1Ip" {
@@ -11,5 +11,5 @@ output "vsmarts_vsmartEth1Ip" {
 }
 
 output "vsmarts_vsmartEth1EIP" {
-  value = aws_eip.vsmart_2[*].public_ip
+  value = aws_eip.vsmart_public[*].public_ip
 }

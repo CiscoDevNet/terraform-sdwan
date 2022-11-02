@@ -3,7 +3,7 @@ output "vbonds_vbondEth0Ip" {
 }
 
 output "vbonds_vbondEth0EIP" {
-  value = "${module.vbond.vbonds_vbondEth0EIP}"
+  value = var.enable_eip_mgmt ? "${module.vbond.vbonds_vbondEth0EIP}" : null
 }
 
 output "vbonds_vbondEth1Ip" {
@@ -19,7 +19,7 @@ output "vmanages_vmanageEth0Ip" {
 }
 
 output "vmanages_vmanageEth0EIP" {
-  value = "${module.vmanage.vmanages_vmanageEth0EIP}"
+  value = var.enable_eip_mgmt ? "${module.vmanage.vmanages_vmanageEth0EIP}" : null
 }
 
 output "vmanages_vmanageEth1Ip" {
@@ -35,7 +35,7 @@ output "vsmarts_vsmartEth0Ip" {
 }
 
 output "vsmarts_vsmartEth0EIP" {
-  value = "${module.vsmart.vsmarts_vsmartEth0EIP}"
+  value = var.enable_eip_mgmt ? "${module.vsmart.vsmarts_vsmartEth0EIP}" : null
 }
 
 output "vsmarts_vsmartEth1Ip" {
