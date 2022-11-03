@@ -107,8 +107,25 @@ resource "aws_subnet" "public_subnet_az_2" {
 }
 
 /*
-  Public Route Table
+  Route Tables
 */
+resource "aws_route_table" "mgmt" {
+  vpc_id = "${aws_vpc.sdwan_cp.id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.sdwan_cp.id}"
+  }
+
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "SD-WAN CP (mgmt)"
+      VPC  = "SD-WAN CP"
+    }
+  )
+}
+
 resource "aws_route_table" "public" {
   vpc_id = "${aws_vpc.sdwan_cp.id}"
 
@@ -127,16 +144,16 @@ resource "aws_route_table" "public" {
 }
 
 /*
-  Public Route Table Associations
+  Route Table Associations
 */
 resource "aws_route_table_association" "subnet_m1_to_rt_public" {
   subnet_id      = "${aws_subnet.mgmt_subnet_az_1.id}"
-  route_table_id = "${aws_route_table.public.id}"
+  route_table_id = "${aws_route_table.mgmt.id}"
 }
 
 resource "aws_route_table_association" "subnet_m2_to_rt_public" {
   subnet_id      = "${aws_subnet.mgmt_subnet_az_2.id}"
-  route_table_id = "${aws_route_table.public.id}"
+  route_table_id = "${aws_route_table.mgmt.id}"
 }
 
 resource "aws_route_table_association" "subnet_p1_to_rt_public" {
