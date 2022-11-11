@@ -34,6 +34,7 @@ users:
 packages:
 - net-tools
 - tinyproxy
+- kitty-terminfo
 runcmd:
 - sed -i 's/^Port 8888/Port 8443/' /etc/tinyproxy/tinyproxy.conf
 - sed -i 's/^Timeout 600/Timeout 30/' /etc/tinyproxy/tinyproxy.conf
