@@ -1,10 +1,10 @@
-data "aws_ami" "ubuntu-jammy" {
+data "aws_ami" "ubuntu-kinetic" {
   most_recent = true
   owners      = ["099720109477"]
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-kinetic-22.10-amd64-server-*"]
   }
 
   filter {
@@ -14,7 +14,7 @@ data "aws_ami" "ubuntu-jammy" {
 }
 
 resource "aws_instance" "devbox" {
-    ami                         = "${data.aws_ami.ubuntu-jammy.id}"
+    ami                         = "${data.aws_ami.ubuntu-kinetic.id}"
     instance_type               = "${var.devbox_instance_type}"
     vpc_security_group_ids      = ["${aws_security_group.sdwan_cp.id}"]
     subnet_id                   = "${aws_subnet.public_subnet_az_1.id}"
