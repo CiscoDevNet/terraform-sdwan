@@ -9,6 +9,7 @@ module "vmanage" {
   enable_eip_mgmt        = "${var.enable_eip_mgmt}"
   ssh_pubkey             = "${var.ssh_pubkey}"
   sdwan_org              = "${var.sdwan_org}"
+  route53_zone           = "${var.route53_zone}"
   counter                = "${var.vmanage_count}"
   mgmt_subnets           = "${data.terraform_remote_state.spam.outputs.mgmt_subnets}"
   public_subnets         = "${data.terraform_remote_state.spam.outputs.public_subnets}"

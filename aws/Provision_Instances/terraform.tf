@@ -21,6 +21,9 @@ variable "enable_eip_mgmt" {
 }
 variable "ssh_pubkey" {}
 variable "sdwan_org" {}
+variable "route53_zone" {
+  default = ""
+}
 variable "network_state_file" {
   default = "../Provision_VPC/terraform.tfstate"
 }
