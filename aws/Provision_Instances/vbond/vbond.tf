@@ -1,21 +1,18 @@
 # temporary hack
 data "aws_subnet" "public_subnet" {
-  count = "${var.counter}"
-  id    = "${var.public_subnets[ count.index % length(var.public_subnets) ]}"
+  id    = "${var.public_subnets[0]}"
 }
 
 resource "aws_instance" "vbond" {
-  count = "${var.counter}"
   ami                         = "${var.vbond_ami}"
   instance_type               = "${var.viptela_instances_type}"
   vpc_security_group_ids      = ["${var.sdwan_cp_sg_id}"]
-  subnet_id                   = "${var.mgmt_subnets[ count.index % length(var.mgmt_subnets) ]}"
+  subnet_id                   = "${var.mgmt_subnets[0]}"
   associate_public_ip_address = true
   source_dest_check           = true
   user_data                   = templatefile("cloud-init/vbond.user_data", {
     day0       = var.vbond_day0
-    index      = count.index + 1
-    hostname   = format("sdwan-vbond-%02d", count.index)
+    hostname   = "sdwan-vbond"
     ssh_pubkey = var.ssh_pubkey
     sdwan_org  = var.sdwan_org
   })
@@ -23,7 +20,7 @@ resource "aws_instance" "vbond" {
   tags = merge(
     var.common_tags,
     {
-      Name  = "${format("sdwan-vbond-%02d", count.index)}"
+      Name  = "sdwan-vbond"
     }
   )
 
@@ -31,40 +28,30 @@ resource "aws_instance" "vbond" {
 }
 
 resource "aws_network_interface" "vbond" {
-  count = "${var.counter}"
-  subnet_id                   = "${var.public_subnets[ count.index % length(var.public_subnets) ]}"
-  private_ips                 = [cidrhost(data.aws_subnet.public_subnet[count.index].cidr_block, 12)]
+  subnet_id                   = "${var.public_subnets[0]}"
+  private_ips                 = [cidrhost(data.aws_subnet.public_subnet.cidr_block, 12)]
   security_groups             = ["${var.sdwan_cp_sg_id}"]
   source_dest_check           = true
 }
 
 resource "aws_network_interface_attachment" "vbond" {
-  count = "${var.counter}"
-  instance_id          = aws_instance.vbond[count.index].id
-  network_interface_id = aws_network_interface.vbond[count.index].id
+  instance_id          = aws_instance.vbond.id
+  network_interface_id = aws_network_interface.vbond.id
   device_index         = 1
 }
 
 resource "aws_eip" "vbond_mgmt" {
-  count = var.enable_eip_mgmt ? var.counter : 0
-  network_interface = "${aws_instance.vbond[count.index].primary_network_interface_id}"
+  network_interface = "${aws_instance.vbond.primary_network_interface_id}"
   vpc               = true
   tags = merge(
     var.common_tags,
     {
-      Name  = "${format("eip_mgmt_vbond-%02d", count.index)}"
+      Name  = "eip_mgmt_vbond"
     }
   )
 }
 
-resource "aws_eip" "vbond_public" {
-  count = "${var.counter}"
-  network_interface = "${aws_network_interface.vbond[count.index].id}"
-  vpc               = true
-  tags = merge(
-    var.common_tags,
-    {
-      Name  = "${format("eip_vbond-%02d", count.index)}"
-    }
-  )
+resource "aws_eip_association" "vbond_public" {
+  network_interface_id = "${aws_network_interface.vbond.id}"
+  allocation_id = "${var.vbond_eip_allocation}"
 }

@@ -25,3 +25,11 @@ output "mgmt_subnets" {
 output "public_subnets" {
   value = ["${aws_subnet.public_subnet_az_1.id}", "${aws_subnet.public_subnet_az_2.id}"]
 }
+
+output "vbond_eip_allocation" {
+  value = "${aws_eip.vbond_public.allocation_id}"
+}
+
+output "vbond_ip" {
+  value = "${aws_eip.vbond_public.public_ip}"
+}

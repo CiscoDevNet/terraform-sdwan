@@ -246,3 +246,16 @@ resource "aws_security_group" "sdwan_cp" {
     }
   )
 }
+
+/*
+  vBond Elastic IP
+*/
+resource "aws_eip" "vbond_public" {
+  vpc               = true
+  tags = merge(
+    var.common_tags,
+    {
+      Name  = "eip_vbond"
+    }
+  )
+}

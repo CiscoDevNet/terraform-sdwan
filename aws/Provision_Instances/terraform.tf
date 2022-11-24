@@ -1,5 +1,4 @@
 variable "vbond_ami" {}
-variable "vbond_count" {}
 variable "vbond_day0" {
   default = ""
 }

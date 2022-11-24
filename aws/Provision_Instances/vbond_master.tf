@@ -10,7 +10,7 @@ module "vbond" {
   ssh_pubkey             = "${var.ssh_pubkey}"
   sdwan_org              = "${var.sdwan_org}"
   route53_zone           = "${var.route53_zone}"
-  counter                = "${var.vbond_count}"
   mgmt_subnets           = "${data.terraform_remote_state.spam.outputs.mgmt_subnets}"
   public_subnets         = "${data.terraform_remote_state.spam.outputs.public_subnets}"
+  vbond_eip_allocation   = "${data.terraform_remote_state.spam.outputs.vbond_eip_allocation}"
 }
