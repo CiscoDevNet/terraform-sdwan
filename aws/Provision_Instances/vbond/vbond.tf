@@ -41,6 +41,7 @@ resource "aws_network_interface_attachment" "vbond" {
 }
 
 resource "aws_eip" "vbond_mgmt" {
+  count = var.enable_eip_mgmt ? 1 : 0
   network_interface = "${aws_instance.vbond.primary_network_interface_id}"
   vpc               = true
   tags = merge(

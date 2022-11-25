@@ -3,7 +3,7 @@ output "vbonds_vbondEth0Ip" {
 }
 
 output "vbonds_vbondEth0EIP" {
-  value = var.enable_eip_mgmt ? aws_eip.vbond_mgmt.public_ip : null
+  value = var.enable_eip_mgmt ? aws_eip.vbond_mgmt[*].public_ip : null
 }
 
 output "vbonds_vbondEth1Ip" {
