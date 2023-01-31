@@ -35,6 +35,8 @@ packages:
 - net-tools
 - tinyproxy
 - kitty-terminfo
+- mosh
+- tmux
 runcmd:
 - sed -i 's/^Port 8888/Port 8443/' /etc/tinyproxy/tinyproxy.conf
 - sed -i 's/^Timeout 600/Timeout 30/' /etc/tinyproxy/tinyproxy.conf
@@ -48,6 +50,11 @@ write_files:
   content: |
     sudo systemctl restart tinyproxy
     sudo journalctl -f -u tinyproxy
+- path: /home/cisco/.tmux.conf
+  permissions: '0644'
+  content: |
+    set-option -g prefix C-a
+    new-session
 EOF
 
     tags = merge(
