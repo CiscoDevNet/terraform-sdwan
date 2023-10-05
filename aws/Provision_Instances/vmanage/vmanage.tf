@@ -56,7 +56,7 @@ resource "aws_network_interface_attachment" "vmanage" {
 resource "aws_eip" "vmanage_mgmt" {
   count = var.enable_eip_mgmt ? var.counter : 0
   network_interface = "${aws_instance.vmanage[count.index].primary_network_interface_id}"
-  vpc               = true
+  domain = "vpc"
   tags = merge(
     var.common_tags,
     {
@@ -68,7 +68,7 @@ resource "aws_eip" "vmanage_mgmt" {
 resource "aws_eip" "vmanage_public" {
   count = "${var.counter}"
   network_interface = "${aws_network_interface.vmanage[count.index].id}"
-  vpc               = true
+  domain = "vpc"
   tags = merge(
     var.common_tags,
     {

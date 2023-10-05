@@ -47,7 +47,7 @@ resource "aws_network_interface_attachment" "vsmart" {
 resource "aws_eip" "vsmart_mgmt" {
   count = var.enable_eip_mgmt ? var.counter : 0
   network_interface = "${aws_instance.vsmart[count.index].primary_network_interface_id}"
-  vpc               = true
+  domain = "vpc"
   tags = merge(
     var.common_tags,
     {
@@ -59,7 +59,7 @@ resource "aws_eip" "vsmart_mgmt" {
 resource "aws_eip" "vsmart_public" {
   count = "${var.counter}"
   network_interface = "${aws_network_interface.vsmart[count.index].id}"
-  vpc               = true
+  domain = "vpc"
   tags = merge(
     var.common_tags,
     {
