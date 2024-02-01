@@ -1,10 +1,10 @@
-data "aws_ami" "ubuntu-lunar" {
+data "aws_ami" "ubuntu-mantic" {
   most_recent = true
   owners      = ["099720109477"]
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-lunar-23.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-mantic-23.10-amd64-server-*"]
   }
 
   filter {
@@ -14,7 +14,7 @@ data "aws_ami" "ubuntu-lunar" {
 }
 
 resource "aws_instance" "devbox" {
-    ami                         = "${data.aws_ami.ubuntu-lunar.id}"
+    ami                         = "${data.aws_ami.ubuntu-mantic.id}"
     instance_type               = "${var.devbox_instance_type}"
     vpc_security_group_ids      = ["${aws_security_group.sdwan_cp.id}"]
     subnet_id                   = "${aws_subnet.public_subnet_az_1.id}"
