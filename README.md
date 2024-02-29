@@ -144,6 +144,7 @@ $ terraform apply
 
 Deploy Controllers into VPC:
 Edit Provision_Instances/my_instances_variables.auto.tfvars.json with appropriate settings.
+> Note: Default maximum Elastic IPs per VPC is 5, the setup needs 6. You can ask for an increase of your VPC EIP quota here: https://console.aws.amazon.com/servicequotas/home/services/ec2/quotas/L-0263D0A3
 ```
 {
     "vbond_instances_type": "c5.large",
